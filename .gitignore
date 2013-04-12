@@ -10,3 +10,4 @@ __history/
 /ext/php_osinfo/php_osinfo.dll
 *.dsk
 *.or
+/ext/php_winres/php_winres.dll
