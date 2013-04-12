@@ -11,3 +11,4 @@ __history/
 *.dsk
 *.or
 /ext/php_winres/php_winres.dll
+/ext/php_squall/php_squall.dll
