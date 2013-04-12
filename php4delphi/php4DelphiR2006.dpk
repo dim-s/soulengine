@@ -1,0 +1,48 @@
+package php4DelphiR2006;
+
+{$R *.res}
+{$R 'php4delphi.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'php4Delphi (run-rime)'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl;
+
+contains
+  ZENDAPI in 'ZENDAPI.pas',
+  DelphiFunctions in 'DelphiFunctions.pas',
+  php4delphi in 'php4delphi.pas',
+  PHPAPI in 'PHPAPI.pas',
+  phpModules in 'phpModules.pas',
+  PHPLibrary in 'PHPLibrary.pas',
+  phpCustomLibrary in 'phpCustomLibrary.pas',
+  PHPFunctions in 'PHPFunctions.pas',
+  PHPTypes in 'PHPTypes.pas',
+  ZENDTypes in 'ZENDTypes.pas',
+  phpClass in 'phpClass.pas',
+  PHPCommon in 'PHPCommon.pas';
+
+end.

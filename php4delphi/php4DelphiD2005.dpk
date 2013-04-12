@@ -1,0 +1,45 @@
+package php4DelphiD2005;
+
+{$R *.res}
+{$R 'php4delphi.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'php4Delphi (design-time)'}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  vcl,
+  designide,
+  vclactnband,
+  vclx,
+  php4DelphiR2005;
+
+contains
+  PHPProjectWizard in 'PHPProjectWizard.pas',
+  php4DelphiReg in 'php4DelphiReg.pas',
+  php4DelphiWeb in 'php4DelphiWeb.pas',
+  phpWeb in 'phpWeb.pas',
+  phpAbout in 'phpAbout.pas' {dlgAbout};
+
+end.
