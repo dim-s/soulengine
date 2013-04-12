@@ -1,0 +1,16 @@
+{$DEFINE NOT_LITE}
+
+{.$DEFINE ADD_SKINS}
+{$DEFINE VS_EDITOR}          // 0.52 mb
+{$DEFINE ADD_CHROMIUM}      // 0.57 mb
+
+{.$DEFINE NO_DEBUG}
+
+
+{.$DEFINE C_SIZECONTROL}       // 1 kb
+{$DEFINE C_SMARTTAB}         // 0.02 mb
+
+
+{$IFDEF VS_EDITOR}
+        {$DEFINE C_SIZECONTROL}
+{$ENDIF}
