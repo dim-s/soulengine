@@ -3,3 +3,10 @@
 *.phb
 *.dproj
 __history/
+*.ppu
+*.~dpr
+*.~dsk
+*.dof
+/ext/php_osinfo/php_osinfo.dll
+*.dsk
+*.or
