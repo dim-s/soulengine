@@ -517,91 +517,9 @@ begin
 
   php_register_variable_ex         := GetProcAddress(PHPLib, 'php_register_variable_ex');
 
-  php_output_startup               := GetProcAddress(PHPLib, 'php_output_startup');
-
-  php_output_activate              := GetProcAddress(PHPLib, 'php_output_activate');
-
-  php_output_set_status            := GetProcAddress(PHPLib, 'php_output_set_status');
-
-  php_output_register_constants    := GetProcAddress(PHPLib, 'php_output_register_constants');
-
-  php_start_ob_buffer              := GetProcAddress(PHPLib, 'php_start_ob_buffer');
-
-  php_start_ob_buffer_named        := GetProcAddress(PHPLib, 'php_start_ob_buffer_named');
-
-  php_end_ob_buffer                := GetProcAddress(PHPLib, 'php_end_ob_buffer');
-
-  php_end_ob_buffers               := GetProcAddress(PHPLib, 'php_end_ob_buffers');
-
-  php_ob_get_buffer                := GetProcAddress(PHPLib, 'php_ob_get_buffer');
-
-  php_ob_get_length                := GetProcAddress(PHPLib, 'php_ob_get_length');
-
-  php_start_implicit_flush         := GetProcAddress(PHPLib, 'php_start_implicit_flush');
-
-  php_end_implicit_flush           := GetProcAddress(PHPLib, 'php_end_implicit_flush');
-
-  php_get_output_start_filename    := GetProcAddress(PHPLib, 'php_get_output_start_filename');
-
-  php_get_output_start_lineno      := GetProcAddress(PHPLib, 'php_get_output_start_lineno');
-
-  php_ob_handler_used              := GetProcAddress(PHPLib, 'php_ob_handler_used');
-
-  php_ob_init_conflict             := GetProcAddress(PHPLib, 'php_ob_init_conflict');
-
-  php_strtoupper                   := GetProcAddress(PHPLib, 'php_strtoupper');
-
-  php_strtolower                   := GetProcAddress(PHPLib, 'php_strtolower');
-
-  php_strtr                        := GetProcAddress(PHPLib, 'php_strtr');
-
   php_stripcslashes                := GetProcAddress(PHPLib, 'php_stripcslashes');
 
-  php_basename                     := GetProcAddress(PHPLib, 'php_basename');
-
-  php_dirname                      := GetProcAddress(PHPLib, 'php_dirname');
-
-  php_stristr                      := GetProcAddress(PHPLib, 'php_stristr');
-
-  php_str_to_str                   := GetProcAddress(PHPLib, 'php_str_to_str');
-
   php_strip_tags                   := GetProcAddress(PHPLib, 'php_strip_tags');
-
-  php_implode                      := GetProcAddress(PHPLib, 'php_implode');
-
-  php_explode                      := GetProcAddress(PHPLib, 'php_explode');
-
-  php_info_html_esc                := GetProcAddress(PHPLib, 'php_info_html_esc');
-
-  php_print_info_htmlhead          := GetProcAddress(PHPLib, 'php_print_info_htmlhead');
-
-  php_print_info                   := GetProcAddress(PHPLib, 'php_print_info');
-
-  php_info_print_table_colspan_header := GetProcAddress(PHPLib, 'php_info_print_table_colspan_header');
-
-  php_info_print_box_start            := GetProcAddress(PHPLib, 'php_info_print_box_start');
-
-  php_info_print_box_end              := GetProcAddress(PHPLib, 'php_info_print_box_end');
-
-  php_info_print_hr                   := GetProcAddress(PHPLib, 'php_info_print_hr');
-
-  php_info_print_table_start          := GetProcAddress(PHPLib, 'php_info_print_table_start');
-
-  php_info_print_table_row1           := GetProcAddress(PHPLib, 'php_info_print_table_row');
-
-  php_info_print_table_row2           := GetProcAddress(PHPLib, 'php_info_print_table_row');
-
-  php_info_print_table_row3           := GetProcAddress(PHPLib, 'php_info_print_table_row');
-
-  php_info_print_table_row4           := GetProcAddress(PHPLib, 'php_info_print_table_row');
-
-  php_info_print_table_row            := GetProcAddress(PHPLib, 'php_info_print_table_row');
-
-  php_info_print_table_end            := GetProcAddress(PHPLib, 'php_info_print_table_end');
-
-  php_body_write                      := GetProcAddress(PHPLib, 'php_body_write');
-
-  php_header_write                    := GetProcAddress(PHPLib, 'php_header_write');
 
   php_log_err                         := GetProcAddress(PHPLib, 'php_log_err');
 
@@ -616,16 +534,6 @@ begin
   php_set_sock_blocking               := GetProcAddress(PHPLib, 'php_set_sock_blocking');
 
   php_copy_file                       := GetProcAddress(PHPLib, 'php_copy_file');
-
-  {$IFDEF PHP4}
-  php_flock                           := GetProcAddress(PHPLib, 'php_flock');
-  php_lookup_hostname                 := GetProcAddress(PHPLib, 'php_lookup_hostname');
-  {$ENDIF}
-
-
-  php_header                          := GetProcAddress(PHPLib, 'php_header');
-
-  php_setcookie                       := GetProcAddress(PHPLib, 'php_setcookie');
 
   php_escape_html_entities            := GetProcAddress(PHPLib, 'php_escape_html_entities');
 
@@ -648,7 +556,7 @@ begin
   php_raw_url_encode                  := GetProcAddress(PHPLib, 'php_raw_url_encode');
 
   {$IFDEF PHP510}
-  php_register_extensions              := GetProcAddress(PHPLib, 'php_register_extensions');
+  php_register_extensions             := GetProcAddress(PHPLib, 'php_register_extensions');
   {$ELSE}
   php_startup_extensions              := GetProcAddress(PHPLib, 'php_startup_extensions');
   {$ENDIF}
@@ -688,49 +596,7 @@ begin
   if @php_register_variable = nil then raise EPHP4DelphiException.Create('php_register_variable');
   if @php_register_variable_safe = nil then raise EPHP4DelphiException.Create('php_register_variable_safe');
   if @php_register_variable_ex = nil then raise EPHP4DelphiException.Create('php_register_variable_ex');
-  if @php_output_startup = nil then raise EPHP4DelphiException.Create('php_output_startup');
-  if @php_output_activate = nil then raise EPHP4DelphiException.Create('php_output_activate');
-  if @php_output_set_status = nil then raise EPHP4DelphiException.Create('php_output_set_status');
-  if @php_output_register_constants = nil then raise EPHP4DelphiException.Create('php_output_register_constants');
-  if @php_start_ob_buffer = nil then raise EPHP4DelphiException.Create('php_start_ob_buffer');
-  if @php_start_ob_buffer_named = nil then raise EPHP4DelphiException.Create('php_start_ob_buffer_named');
-  if @php_end_ob_buffer = nil then raise EPHP4DelphiException.Create('php_end_ob_buffer');
-  if @php_end_ob_buffers = nil then raise EPHP4DelphiException.Create('php_end_ob_buffers');
-  if @php_ob_get_buffer = nil then raise EPHP4DelphiException.Create('php_ob_get_buffer');
-  if @php_ob_get_length = nil then raise EPHP4DelphiException.Create('php_ob_get_length');
-  if @php_start_implicit_flush = nil then raise EPHP4DelphiException.Create('php_start_implicit_flush');
-  if @php_end_implicit_flush = nil then raise EPHP4DelphiException.Create('php_end_implicit_flush');
-  if @php_get_output_start_filename = nil then raise EPHP4DelphiException.Create('php_get_output_start_filename');
-  if @php_get_output_start_lineno = nil then raise EPHP4DelphiException.Create('php_get_output_start_lineno');
-  if @php_ob_handler_used = nil then raise EPHP4DelphiException.Create('php_ob_handler_used');
-  if @php_ob_init_conflict = nil then raise EPHP4DelphiException.Create('php_ob_init_conflict');
-  if @php_strtoupper = nil then raise EPHP4DelphiException.Create('php_strtoupper');
-  if @php_strtolower = nil then raise EPHP4DelphiException.Create('php_strtolower');
-  if @php_strtr = nil then raise EPHP4DelphiException.Create('php_strtr');
-  if @php_stripcslashes = nil then raise EPHP4DelphiException.Create('php_stripcslashes');
-  if @php_basename = nil then raise EPHP4DelphiException.Create('php_basename');
-  if @php_dirname = nil then raise EPHP4DelphiException.Create('php_dirname');
-  if @php_stristr = nil then raise EPHP4DelphiException.Create('php_stristr');
-  if @php_str_to_str = nil then raise EPHP4DelphiException.Create('php_str_to_str');
   if @php_strip_tags = nil then raise EPHP4DelphiException.Create('php_strip_tags');
-  if @php_implode = nil then raise EPHP4DelphiException.Create('php_implode');
-  if @php_explode = nil then raise EPHP4DelphiException.Create('php_explode');
-  if @php_info_html_esc = nil then raise EPHP4DelphiException.Create('php_info_html_esc');
-  if @php_print_info_htmlhead = nil then raise EPHP4DelphiException.Create('php_print_info_htmlhead');
-  if @php_print_info = nil then raise EPHP4DelphiException.Create('php_print_info');
-  if @php_info_print_table_colspan_header = nil then raise EPHP4DelphiException.Create('php_info_print_table_colspan_header');
-  if @php_info_print_box_start = nil then raise EPHP4DelphiException.Create('php_info_print_box_start');
-  if @php_info_print_box_end = nil then raise EPHP4DelphiException.Create('php_info_print_box_end');
-  if @php_info_print_hr = nil then raise EPHP4DelphiException.Create('php_info_print_hr');
-  if @php_info_print_table_start = nil then raise EPHP4DelphiException.Create('php_info_print_table_start');
-  if @php_info_print_table_row1 = nil then raise EPHP4DelphiException.Create('php_info_print_table_row1');
-  if @php_info_print_table_row2 = nil then raise EPHP4DelphiException.Create('php_info_print_table_row2');
-  if @php_info_print_table_row3 = nil then raise EPHP4DelphiException.Create('php_info_print_table_row3');
-  if @php_info_print_table_row4 = nil then raise EPHP4DelphiException.Create('php_info_print_table_row4');
-  if @php_info_print_table_row = nil then raise EPHP4DelphiException.Create('php_info_print_table_row');
-  if @php_info_print_table_end = nil then raise EPHP4DelphiException.Create('php_info_print_table_end');
-  if @php_body_write = nil then raise EPHP4DelphiException.Create('php_body_write');
-  if @php_header_write = nil then raise EPHP4DelphiException.Create('php_header_write');
   if @php_log_err = nil then raise EPHP4DelphiException.Create('php_log_err');
   if @php_html_puts = nil then raise EPHP4DelphiException.Create('php_html_puts');
   if @_php_error_log = nil then raise EPHP4DelphiException.Create('_php_error_log');
@@ -739,14 +605,6 @@ begin
   if @php_set_sock_blocking = nil then raise EPHP4DelphiException.Create('php_set_sock_blocking');
   if @php_copy_file = nil then raise EPHP4DelphiException.Create('php_copy_file');
 
-  {$IFDEF PHP4}
-  if @php_flock = nil then raise EPHP4DelphiException.Create('php_flock');
-  if @php_lookup_hostname = nil then raise EPHP4DelphiException.Create('php_lookup_hostname');
-  {$ENDIF}
-
-  if @php_header = nil then raise EPHP4DelphiException.Create('php_header');
-  if @php_setcookie = nil then raise EPHP4DelphiException.Create('php_setcookie');
-  if @php_escape_html_entities = nil then raise EPHP4DelphiException.Create('php_escape_html_entities');
   if @php_ini_long = nil then raise EPHP4DelphiException.Create('php_ini_long');
   if @php_ini_double = nil then raise EPHP4DelphiException.Create('php_ini_double');
   if @php_ini_string = nil then raise EPHP4DelphiException.Create('php_ini_string');
