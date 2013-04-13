@@ -130,30 +130,6 @@ php_info_html_esc: function (str : PAnsiChar; TSRMLS_DC : pointer) : PAnsiChar; 
 
 php_print_info_htmlhead: procedure (TSRMLS_D : pointer); cdecl;
 
-php_print_info: procedure (flag : Integer; TSRMLS_DC : pointer); cdecl;
-
-
-php_info_print_table_colspan_header: procedure (num_cols : Integer;
-  header : PAnsiChar); cdecl;
-
-php_info_print_box_start: procedure (bg : Integer); cdecl;
-
-php_info_print_box_end: procedure; cdecl;
-
-php_info_print_hr: procedure; cdecl;
-
-php_info_print_table_start: procedure; cdecl;
-php_info_print_table_row1: procedure(n1 : integer; c1: PAnsiChar); cdecl;
-php_info_print_table_row2: procedure (n2 : integer; c1, c2 : PAnsiChar); cdecl;
-php_info_print_table_row3: procedure (n3 : integer; c1, c2, c3 : PAnsiChar); cdecl;
-php_info_print_table_row4: procedure (n4 : integer; c1, c2, c3, c4 : PAnsiChar); cdecl;
-php_info_print_table_row : procedure (n2 : integer; c1, c2 : pAnsiChar); cdecl;
-
-php_info_print_table_end: procedure (); cdecl;
-
-php_body_write: function (const str : PAnsiChar; str_length: uint; TSRMLS_DC : pointer) : integer; cdecl;
-php_header_write: function (const str : PAnsiChar; str_length: uint; TSRMLS_DC : pointer) : integer; cdecl;
-
 php_log_err: procedure (err_msg : PAnsiChar; TSRMLS_DC : pointer); cdecl;
 
 php_html_puts: procedure (str : PAnsiChar; str_len : integer; TSRMLS_DC : pointer); cdecl;
@@ -167,19 +143,7 @@ php_info_print_css: procedure(); cdecl;
 php_set_sock_blocking: function (socketd : integer; block : integer; TSRMLS_DC : pointer) : integer; cdecl;
 php_copy_file: function (src : PAnsiChar; dest : PAnsiChar; TSRMLS_DC : pointer) : integer; cdecl;
 
-{$IFDEF PHP4}
-php_flock: function (fd : integer; operation : integer) : integer; cdecl;
-php_lookup_hostname: function (const addr : PAnsiChar; _in : pinaddr ) : integer; cdecl;
-{$ENDIF}
-
-php_header: function() : integer; cdecl;
-php_setcookie: function (name : PAnsiChar; name_len : integer; value : PAnsiChar; value_len: integer;
-    expires : longint; path : PAnsiChar; path_len : integer; domain : PAnsiChar; domain_len : integer;
-    secure : integer; TSRMLS_DC : pointer) : integer; cdecl;
-
-
 var
-
 php_escape_html_entities: function (old : PByte; oldlen : integer; newlen : PINT; all : integer;
   quote_style : integer; hint_charset: PAnsiChar; TSRMLS_DC : pointer) : PAnsiChar; cdecl;
 

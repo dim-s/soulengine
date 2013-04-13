@@ -341,41 +341,7 @@ end;
 
 
 procedure php_info_library(zend_module : Pointer; TSRMLS_DC : pointer); cdecl;
-var
- cnt : integer;
- FN, FD : AnsiString;
 begin
-
-  php_info_print_table_start();
-  php_info_print_table_row(2, PAnsiChar('SAPI module version'), PAnsiChar('PHP4Delphi 7.2 Oct 2009'));
-  php_info_print_table_row(2, PAnsiChar('Variables support'), PAnsiChar('enabled'));
-  php_info_print_table_row(2, PAnsiChar('Constants support'), PAnsiChar('enabled'));
-  php_info_print_table_row(2, PAnsiChar('Classes support'), PAnsiChar('enabled'));
-  php_info_print_table_row(2, PAnsiChar('Home page'), PAnsiChar('http://users.telenet.be/ws36637'));
-
-  php_info_print_table_row(2, 'delphi_date', 'Returns the current date.');
-  php_info_print_table_row(2, 'delphi_extract_file_dir', 'Extracts the drive and directory parts from FileName.');
-  php_info_print_table_row(2, 'delphi_extract_file_drive', 'Returns the drive portion of a file name.');
-  php_info_print_table_row(2, 'delphi_extract_file_name', 'Extracts the name and extension parts of a file name.');
-  php_info_print_table_row(2, 'delphi_extract_file_ext', 'Returns the extension portions of a file name.');
-  php_info_print_table_row(2, 'delphi_show_message', 'Displays a message box with an OK button.');
-  php_info_print_table_row(2, 'register_delphi_object', 'Register Delphi object as PHP class');
-  php_info_print_table_row(2, 'delphi_get_author', 'Returns TAuthor object');
-  php_info_print_table_row(2, 'delphi_str_date', 'Converts a TDateTime value to a string.');
-  php_info_print_table_row(2, 'delphi_get_system_directory', 'Returns Windows system directory');
-  php_info_print_table_row(2, 'delphi_input_box', 'Displays an input dialog box that enables the user to enter a string.');
-  php_info_print_table_row(2, 'register_delphi_component', 'Register Delphi component as PHP class');
-
-  if Assigned(PHPEngine) then
-   begin
-     for cnt := 0 to PHPEngine.FHash.Count - 1 do
-      begin
-        FN := PHPEngine.FHash[cnt];
-        FD := TPHPFunction(PHPEngine.FHash.Objects[cnt]).Description;
-        php_info_print_table_row(2, PAnsiChar(FN), PAnsiChar(FD));
-      end;
-   end;
-  php_info_print_table_end();
 end;
 
 function php_delphi_startup(sapi_module : Psapi_module_struct) : integer; cdecl;
@@ -519,10 +485,10 @@ begin
      if Assigned(PHPEngine.OnLogMessage) then
        phpEngine.HandleLogMessage(php, msg)
         else
-          MessageBoxA(0, MSG, 'PHP4Delphi', MB_OK)
+          MessageBoxA(0, MSG, 'PHP4Soulengine', MB_OK)
     end
       else
-        MessageBoxA(0, msg, 'PHP4Delphi', MB_OK);
+        MessageBoxA(0, msg, 'PHP4Soulengine', MB_OK);
 end;
 
 function php_delphi_send_header(p1, TSRMLS_DC : pointer) : integer; cdecl;
@@ -1406,7 +1372,7 @@ end;
 procedure TPHPEngine.PrepareEngine;
 begin
   delphi_sapi_module.name := 'embed';  {to solve a problem with dl()}
-  delphi_sapi_module.pretty_name := 'PHP for Delphi';
+  delphi_sapi_module.pretty_name := 'PHP for Soulengine';
   delphi_sapi_module.startup := php_delphi_startup;
   delphi_sapi_module.shutdown := nil; //php_module_shutdown_wrapper;
   delphi_sapi_module.activate:= nil;
@@ -1442,33 +1408,21 @@ begin
   FLibraryModule.zend_debug := 0;
   {$ENDIF}
   FLibraryModule.zts := USING_ZTS;
-  FLibraryModule.name :=  'php4delphi_internal';
+  FLibraryModule.name :=  'soulengine_internal';
   FLibraryModule.functions := nil;
   FLibraryModule.module_startup_func := @minit;
   FLibraryModule.module_shutdown_func := @mshutdown;
   FLibraryModule.info_func := @php_info_library;
-  FLibraryModule.version := '7.2';
-  {$IFDEF PHP4}
-  FLibraryModule.global_startup_func := nil;
-  {$ENDIF}
+  FLibraryModule.version := '8.0 ds';
+
   FLibraryModule.request_shutdown_func := @rshutdown;
   FLibraryModule.request_startup_func := @rinit;
-  {$IFDEF PHP5}
-  {$IFNDEF PHP520}
-  FLibraryModule.global_id := 0;
-  {$ENDIF}
-  {$ENDIF}
+
   FLibraryModule.module_started := 0;
   FLibraryModule._type := MODULE_PERSISTENT;
   FLibraryModule.handle := nil;
   FLibraryModule.module_number := 0;
-  {$IFDEF PHP530}
-  {$IFNDEF COMPILER_VC9}
-  FLibraryModule.build_id := strdup(PAnsiChar(ZEND_MODULE_BUILD_ID));
-  {$ELSE}
   FLibraryModule.build_id := DupStr(PAnsiChar(ZEND_MODULE_BUILD_ID));
-  {$ENDIF}
-  {$ENDIF}
 end;
 
 procedure TPHPEngine.RegisterConstants;

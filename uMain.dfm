@@ -53,7 +53,6 @@ object __fMain: T__fMain
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = 'Restart'
-    Enabled = False
     TabOrder = 2
     OnClick = b_RestartClick
   end

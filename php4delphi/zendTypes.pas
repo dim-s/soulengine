@@ -319,14 +319,11 @@ const
 
   //zend_modules.h
 const
-{$IFDEF PHP4}
-  ZEND_MODULE_API_NO                          = 20020429;
-{$ELSE}
   {$IFDEF PHP530}
-    ZEND_MODULE_API_NO                       = 20090626;
+    ZEND_MODULE_API_NO                        = {$IFDEF PHP540}20100525{$ELSE}20090626{$ENDIF};
   {$ELSE}
   {$IFDEF PHP520}
-  ZEND_MODULE_API_NO                          = 20060613;
+    ZEND_MODULE_API_NO                          = 20060613;
   {$ELSE}
   {$IFDEF PHP512}
    ZEND_MODULE_API_NO                          = 20050922;
@@ -346,7 +343,6 @@ const
      {$ENDIF}
    {$ENDIF}
    {$ENDIF}
-{$ENDIF}
 {$ENDIF}
 
 {$IFDEF ZTS}
