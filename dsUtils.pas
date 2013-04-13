@@ -120,11 +120,9 @@ end;
 
 
 procedure clipboard_getFiles;
-  var p: pzval_array;
+  var
   FileList: TStrings;
-  arr: PHashTable;
-  tmp: ^ppzval;
-  i, cnt: integer;
+  i: integer;
 begin
   FileList := TStringList.Create;
   FileList.Text := GetFilesFromClipboard;

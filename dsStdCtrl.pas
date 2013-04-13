@@ -4,15 +4,15 @@ unit dsStdCtrl;
 
 interface
 
-  uses Forms, Dialogs, SysUtils, Windows, TypInfo, Classes, Controls, Buttons,
+uses Forms, Dialogs, SysUtils, Windows, TypInfo, Classes, Controls, Buttons,
   Messages, StdCtrls, Graphics, ExtCtrls, ShellAPI, ComCtrls;
 
 type
   TComponentLabel = class(TCustomControl)
   private
-    FCaption: String;
+    FCaption: string;
     FPanel: TCustomControl;
-    procedure SetCaption(const Value: String);
+    procedure SetCaption(const Value: string);
   protected
     procedure Paint; override;
     procedure CreateParams(var Params: TCreateParams); override;
@@ -21,7 +21,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property Caption: String read FCaption write SetCaption;
+    property Caption: string read FCaption write SetCaption;
   end;
 
 type
@@ -29,31 +29,32 @@ type
   private
     FGlyph: TBitmap;
     FLabel: TComponentLabel;
-    FfileName: String;
-    FrealHeight: Integer;
-    FrealWidth: Integer;
-    FCaption: String;
+    FfileName: string;
+    FrealHeight: integer;
+    FrealWidth: integer;
+    FCaption: string;
     FLabelDblClick: TNotifyEvent;
-   // FLabelClick: TNotifyEvent;
-    procedure SetfileName(const Value: String);
-    procedure SetrealHeight(const Value: Integer);
-    procedure SetrealWidth(const Value: Integer);
-    procedure SetCaption(const Value: String);
+    // FLabelClick: TNotifyEvent;
+    procedure SetfileName(const Value: string);
+    procedure SetrealHeight(const Value: integer);
+    procedure SetrealWidth(const Value: integer);
+    procedure SetCaption(const Value: string);
   protected
     procedure SetName(const Value: TComponentName); override;
     procedure Paint; override;
     procedure initLabel;
-    procedure WMMove( var Msg : TWMMove ) ; message WM_MOVE ;{процедура для обработки сообщения Wm_move, чтобы метка перемещалась вместе с кнопкой}
+    procedure WMMove(var Msg: TWMMove); message WM_MOVE;
+    {процедура для обработки сообщения Wm_move, чтобы метка перемещалась вместе с кнопкой}
 
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure loadFromFile(fileName: String);
+    procedure loadFromFile(fileName: string);
   published
-    property __iconName: String read FfileName write SetfileName;
-    property realWidth: Integer read FrealWidth write SetrealWidth default 26;
-    property realHeight: Integer read FrealHeight write SetrealHeight default 26;
-    property Caption: String read FCaption write SetCaption;
+    property __iconName: string read FfileName write SetfileName;
+    property realWidth: integer read FrealWidth write SetrealWidth default 26;
+    property realHeight: integer read FrealHeight write SetrealHeight default 26;
+    property Caption: string read FCaption write SetCaption;
     property OnDblClick: TNotifyEvent read FLabelDblClick write FLabelDblClick;
     property Font;
     property Cursor;
@@ -78,12 +79,13 @@ type
   end;
 
 
-  TDropFilesEvent = procedure (Sender: TObject; Files: TStrings; X: Integer; Y: Integer) of object;
+  TDropFilesEvent = procedure(Sender: TObject; Files: TStrings;
+    X: integer; Y: integer) of object;
 
   TDropFilesTarget = class(TComponent)
   private
     FTargetControl: TWinControl;    // Target control to accept WM_DROPFILES
-    FEnabled: Boolean;              // Enable/disable accepting
+    FEnabled: boolean;              // Enable/disable accepting
     FOnDropFiles: TDropFilesEvent;  // Notification handler
     FAcceptingWindow: HWND;         // Window handle that got "DragAcceptFiles"
     FOldWndProc: TWndMethod;        // Old WindowProc method
@@ -91,7 +93,7 @@ type
     procedure NewWndProc(var Msg: TMessage);
     procedure AttachControl;
     procedure DetachControl;
-    procedure SetEnabled(AEnabled: Boolean);
+    procedure SetEnabled(AEnabled: boolean);
     procedure SetTargetControl(AControl: TWinControl);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -99,7 +101,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property Enabled: Boolean read FEnabled write SetEnabled default True;
+    property Enabled: boolean read FEnabled write SetEnabled default True;
     property TargetControl: TWinControl read FTargetControl write SetTargetControl;
     property OnDropFiles: TDropFilesEvent read FOnDropFiles write FOnDropFiles;
   end;
@@ -107,46 +109,46 @@ type
 type
   TEdit = class(StdCtrls.TEdit)
   private
-    FInitDraw : Boolean;
-    FOldBackColor : TColor;
-    FOldFontColor : TColor;
-    FColorOnEnter : TColor;
+    FInitDraw: boolean;
+    FOldBackColor: TColor;
+    FOldFontColor: TColor;
+    FColorOnEnter: TColor;
     FFontColorOnEnter: TColor;
     FAlignment: TAlignment;
     FTabOnEnter: boolean;
-    FTextHint: String;
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
-    FMarginLeft: Integer;
-    FMarginRight: Integer;
+    FTextHint: string;
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
+    FMarginLeft: integer;
+    FMarginRight: integer;
 
     procedure SetAlignment(Value: TAlignment);
-    procedure SetMarginLeft(const Value: Integer);
-    procedure SetMarginRight(const Value: Integer);
+    procedure SetMarginLeft(const Value: integer);
+    procedure SetMarginRight(const Value: integer);
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
 
-    procedure KeyPress(var Key: Char); override;
+    procedure KeyPress(var Key: char); override;
 
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMPaint(var Message: TWMPaint); message WM_PAINT;
 
     procedure UpdateMargins;
   public
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
   published
-    property TextHint: String read FTextHint write FTextHint;
+    property TextHint: string read FTextHint write FTextHint;
     property Alignment: TAlignment read FAlignment write SetAlignment;
-    property ColorOnEnter : TColor read FColorOnEnter write FColorOnEnter;
-    property FontColorOnEnter : TColor read FFontColorOnEnter write FFontColorOnEnter;
+    property ColorOnEnter: TColor read FColorOnEnter write FColorOnEnter;
+    property FontColorOnEnter: TColor read FFontColorOnEnter write FFontColorOnEnter;
 
-    property TabOnEnter : boolean read FTabOnEnter write FTabOnEnter;
+    property TabOnEnter: boolean read FTabOnEnter write FTabOnEnter;
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
 
-    property MarginLeft: Integer read FMarginLeft write SetMarginLeft;
-    property MarginRight: Integer read FMarginRight write SetMarginRight;
+    property MarginLeft: integer read FMarginLeft write SetMarginLeft;
+    property MarginRight: integer read FMarginRight write SetMarginRight;
   end;
 
 type
@@ -154,24 +156,24 @@ type
   private
     FAlignment: TAlignment;
     FTabOnEnter: boolean;
-    
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
+
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
 
     procedure SetAlignment(Value: TAlignment);
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
 
-    procedure KeyPress(var Key: Char); override;
+    procedure KeyPress(var Key: char); override;
 
     procedure CreateParams(var Params: TCreateParams); override;
   public
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
   published
     property Alignment: TAlignment read FAlignment write SetAlignment;
 
-    property TabOnEnter : boolean read FTabOnEnter write FTabOnEnter;
+    property TabOnEnter: boolean read FTabOnEnter write FTabOnEnter;
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
   end;
@@ -179,95 +181,95 @@ type
 type
   TBitBtn = class(Buttons.TBitBtn)
   private
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
 
   public
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
   published
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
   end;
 
- type
+type
   TListBox = class(StdCtrls.TListBox)
   private
     FAlignment: TAlignment;
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
     FTwoColor: TColor;
     FTwoFontColor: TColor;
-    FMarginLeft: Integer;
-    FBorderSelected: Boolean;
-    FReadOnly: Boolean;
+    FMarginLeft: integer;
+    FBorderSelected: boolean;
+    FReadOnly: boolean;
     FFonts: TList;
     FColors: TList;
 
     procedure SetTwoColor(const Value: TColor);
     procedure SetTwoFontColor(const Value: TColor);
-    procedure SetMarginLeft(const Value: Integer);
-    procedure SetBorderSelected(const Value: Boolean);
+    procedure SetMarginLeft(const Value: integer);
+    procedure SetBorderSelected(const Value: boolean);
     procedure SetAlignment(const Value: TAlignment);
-    procedure SetReadOnly(const Value: Boolean);
+    procedure SetReadOnly(const Value: boolean);
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
-    procedure DrawItem(Index: Integer; Rect: TRect;
-        State: TOwnerDrawState); override;
+    procedure DrawItem(Index: integer; Rect: TRect; State: TOwnerDrawState);
+      override;
 
   public
 
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    procedure SetColor(Index: Integer; Color: TColor);
-    function GetColor(Index: Integer): TColor;
-    procedure ClearColor(Index: Integer);
-    
-    function GetFont(Index: Integer): TFont;
-    procedure ClearFont(Index: Integer);
+    procedure SetColor(Index: integer; Color: TColor);
+    function GetColor(Index: integer): TColor;
+    procedure ClearColor(Index: integer);
+
+    function GetFont(Index: integer): TFont;
+    procedure ClearFont(Index: integer);
   published
     property Alignment: TAlignment read FAlignment write SetAlignment;
-    property BorderSelected: Boolean read FBorderSelected write SetBorderSelected;
+    property BorderSelected: boolean read FBorderSelected write SetBorderSelected;
     property TwoColor: TColor read FTwoColor write SetTwoColor;
     property TwoFontColor: TColor read FTwoFontColor write SetTwoFontColor;
-    property MarginLeft: Integer read FMarginLeft write SetMarginLeft;
-    property ReadOnly: Boolean read FReadOnly write SetReadOnly;
+    property MarginLeft: integer read FMarginLeft write SetMarginLeft;
+    property ReadOnly: boolean read FReadOnly write SetReadOnly;
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
   end;
 
 
-  type
+type
   TCheckBox = class(StdCtrls.TCheckBox)
   private
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
 
   public
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
   published
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
   end;
 
-  type
+type
   TComboBox = class(StdCtrls.TComboBox)
   private
-    FOnFocus : TNotifyEvent;
-    FOnBlur  : TNotifyEvent;
+    FOnFocus: TNotifyEvent;
+    FOnBlur: TNotifyEvent;
   protected
     procedure DoEnter; override;
     procedure DoExit; override;
 
   public
-    constructor Create(AOwner:TComponent); override;
+    constructor Create(AOwner: TComponent); override;
   published
     property OnFocus: TNotifyEvent read FOnFocus write FOnFocus;
     property OnBlur: TNotifyEvent read FOnBlur write FOnBlur;
@@ -294,7 +296,7 @@ end; (*Create*)
 
 procedure TEdit.CreateParams(var Params: TCreateParams);
 const
-  Alignments : array[TAlignment] of LongWord= (ES_Left,ES_Right, ES_Center);
+  Alignments: array[TAlignment] of longword = (ES_Left, ES_Right, ES_Center);
 begin
   inherited CreateParams(Params);
   Params.Style := Params.Style or Alignments[FAlignment];
@@ -349,13 +351,13 @@ begin
   end;
 end;
 
-procedure TEdit.SetMarginLeft(const Value: Integer);
+procedure TEdit.SetMarginLeft(const Value: integer);
 begin
   FMarginLeft := Value;
   UpdateMargins;
 end;
 
-procedure TEdit.SetMarginRight(const Value: Integer);
+procedure TEdit.SetMarginRight(const Value: integer);
 begin
   FMarginRight := Value;
   UpdateMargins;
@@ -363,38 +365,38 @@ end;
 
 procedure TEdit.UpdateMargins;
 begin
-  SendMessage(Handle, EM_SETMARGINS, EC_LEFTMARGIN,LPARAM(FMarginLeft));
-  SendMessage(Handle, EM_SETMARGINS, EC_RIGHTMARGIN,FMarginRight shl 16);
+  SendMessage(Handle, EM_SETMARGINS, EC_LEFTMARGIN, LPARAM(FMarginLeft));
+  SendMessage(Handle, EM_SETMARGINS, EC_RIGHTMARGIN, FMarginRight shl 16);
 end;
 
 procedure TEdit.WMPaint(var Message: TWMPaint);
 begin
-   inherited;
-   if (TextHint <> '') and (Text = '') then
-     Text := TextHint;
+  inherited;
+  if (TextHint <> '') and (Text = '') then
+    Text := TextHint;
 
-   if not FInitDraw then
-   begin
-     FInitDraw := true;
-     UpdateMargins;
-   end;
+  if not FInitDraw then
+  begin
+    FInitDraw := True;
+    UpdateMargins;
+  end;
 
 end;
 
-procedure TEdit.KeyPress(var Key: Char);
+procedure TEdit.KeyPress(var Key: char);
 begin
   inherited KeyPress(Key);
   //UpdateMargins;
-  
-  if FTabOnEnter AND (Owner is TWinControl) then
+
+  if FTabOnEnter and (Owner is TWinControl) then
   begin
-    if Key = Char(VK_RETURN) then
+    if Key = char(VK_RETURN) then
     begin
-     if HiWord(GetKeyState(VK_SHIFT)) <> 0 then
+      if HiWord(GetKeyState(VK_SHIFT)) <> 0 then
         PostMessage((Owner as TWinControl).Handle, WM_NEXTDLGCTL, 1, 0)
-     else
+      else
         PostMessage((Owner as TWinControl).Handle, WM_NEXTDLGCTL, 0, 0);
-     Key := #0;
+      Key := #0;
     end;
   end;
 end; (*KeyPress*)
@@ -409,7 +411,7 @@ end;
 
 procedure TMemo.CreateParams(var Params: TCreateParams);
 const
-  Alignments : array[TAlignment] of LongWord= (ES_Left,ES_Right, ES_Center);
+  Alignments: array[TAlignment] of longword = (ES_Left, ES_Right, ES_Center);
 begin
   inherited CreateParams(Params);
   Params.Style := Params.Style or Alignments[FAlignment];
@@ -419,7 +421,7 @@ procedure TMemo.DoEnter;
 begin
   if Assigned(FOnFocus) then
     FOnFocus(Self);
-    
+
   inherited;
 end;
 
@@ -427,23 +429,23 @@ procedure TMemo.DoExit;
 begin
   if Assigned(FOnBlur) then
     FOnBlur(Self);
-    
+
   inherited;
 end;
 
-procedure TMemo.KeyPress(var Key: Char);
+procedure TMemo.KeyPress(var Key: char);
 begin
   inherited KeyPress(Key);
 
-  if FTabOnEnter AND (Owner is TWinControl) then
+  if FTabOnEnter and (Owner is TWinControl) then
   begin
-    if Key = Char(VK_RETURN) then
+    if Key = char(VK_RETURN) then
     begin
-     if HiWord(GetKeyState(VK_SHIFT)) <> 0 then
+      if HiWord(GetKeyState(VK_SHIFT)) <> 0 then
         PostMessage((Owner as TWinControl).Handle, WM_NEXTDLGCTL, 1, 0)
-     else
+      else
         PostMessage((Owner as TWinControl).Handle, WM_NEXTDLGCTL, 0, 0);
-     Key := #0;
+      Key := #0;
     end;
   end;
 end;
@@ -470,7 +472,7 @@ procedure TBitBtn.DoEnter;
 begin
   if Assigned(FOnFocus) then
     FOnFocus(Self);
-    
+
   inherited;
 end;
 
@@ -478,7 +480,7 @@ procedure TBitBtn.DoExit;
 begin
   if Assigned(FOnBlur) then
     FOnBlur(Self);
-    
+
   inherited;
 end;
 
@@ -494,18 +496,18 @@ begin
   FFonts := TList.Create;
   FColors := TList.Create;
   Style := lbOwnerDrawFixed;
-  BorderSelected := true;
+  BorderSelected := True;
   FReadOnly := False;
 end;
 
 
 destructor TListBox.Destroy;
-  var
+var
   i: integer;
 begin
   for i := 0 to FFonts.Count - 1 do
-  if FFonts[i] <> nil then
-    TFont(FFonts[i]).Free;
+    if FFonts[i] <> nil then
+      TFont(FFonts[i]).Free;
 
   FFonts.Free;
   FColors.Free;
@@ -518,7 +520,7 @@ begin
 
   if Assigned(FOnFocus) then
     FOnFocus(Self);
-    
+
   inherited;
 end;
 
@@ -526,163 +528,162 @@ procedure TListBox.DoExit;
 begin
   if Assigned(FOnBlur) then
     FOnBlur(Self);
-    
+
   inherited;
 end;
 
-procedure TListBox.DrawItem(Index: Integer; Rect: TRect;
-  State: TOwnerDrawState);
-  var
+procedure TListBox.DrawItem(Index: integer; Rect: TRect; State: TOwnerDrawState);
+var
   MyColor, MyFontColor: TColor;
-  H: Integer;
-  ItemHeight: Integer;
+  H: integer;
+  ItemHeight: integer;
 begin
 
-     if (not BorderSelected) and (odFocused in State) then begin
-         DrawFocusRect(Canvas.Handle, Rect);
-         exit;
-     end;
+  if (not BorderSelected) and (odFocused in State) then
+  begin
+    DrawFocusRect(Canvas.Handle, Rect);
+    exit;
+  end;
 
-     if FReadOnly then
-     begin
-        MyColor     := Color;
-        MyFontColor := Font.Color;
-     end
-     else begin
-        MyColor := Canvas.Brush.Color;
-        MyFontColor := Canvas.Font.Color;
-     end;
+  if FReadOnly then
+  begin
+    MyColor := Color;
+    MyFontColor := Font.Color;
+  end
+  else
+  begin
+    MyColor := Canvas.Brush.Color;
+    MyFontColor := Canvas.Font.Color;
+  end;
 
-      if not(odSelected in State) or FReadOnly then
-      begin
-          if (Index+1) mod 2 = 0 then
-          begin
-              if (FTwoColor <> clNone) then
-                MyColor := TwoColor;
+  if not (odSelected in State) or FReadOnly then
+  begin
+    if (Index + 1) mod 2 = 0 then
+    begin
+      if (FTwoColor <> clNone) then
+        MyColor := TwoColor;
 
-              if (FTwoFontColor <> clNone) then
-                MyFontColor := TwoFontColor;
-          end;
+      if (FTwoFontColor <> clNone) then
+        MyFontColor := TwoFontColor;
+    end;
 
-          if (FColors.Count > Index) and (TColor(FColors[ Index ]) <> clNone) then
-          begin
-              MyColor := TColor(FColors[ Index ]);
-          end;
-      end;
+    if (FColors.Count > Index) and (TColor(FColors[Index]) <> clNone) then
+    begin
+      MyColor := TColor(FColors[Index]);
+    end;
+  end;
 
-      Canvas.Pen.Style := psClear;
-      Canvas.Brush.Color := MyColor;
-      Canvas.FillRect(Rect);
+  Canvas.Pen.Style := psClear;
+  Canvas.Brush.Color := MyColor;
+  Canvas.FillRect(Rect);
 
-      if (FFonts.Count > Index) and (FFonts[Index] <> nil) then
-      begin
-        MyFontColor := Canvas.Font.Color;
-        Canvas.Font.Assign( TFont(FFonts[Index]) );
-        if (odSelected in State) and not FReadOnly then
-          Canvas.Font.Color := MyFontColor;
-      end
-      else
-        Canvas.Font.Color := MyFontColor;
+  if (FFonts.Count > Index) and (FFonts[Index] <> nil) then
+  begin
+    MyFontColor := Canvas.Font.Color;
+    Canvas.Font.Assign(TFont(FFonts[Index]));
+    if (odSelected in State) and not FReadOnly then
+      Canvas.Font.Color := MyFontColor;
+  end
+  else
+    Canvas.Font.Color := MyFontColor;
 
-      if Self.ItemHeight > 0 then
-          ItemHeight := Self.ItemHeight
-      else
-          ItemHeight := Canvas.TextHeight(Items[Index]);
+  if Self.ItemHeight > 0 then
+    ItemHeight := Self.ItemHeight
+  else
+    ItemHeight := Canvas.TextHeight(Items[Index]);
 
-      H := Rect.Top + ItemHeight div 2 - Canvas.TextHeight(Items[Index]) div 2;
+  H := Rect.Top + ItemHeight div 2 - Canvas.TextHeight(Items[Index]) div 2;
 
-      case FAlignment of
-        taLeftJustify: Canvas.TextOut(Rect.Left + MarginLeft, H, Items[Index]);
-        taRightJustify: Canvas.TextOut(Rect.Right - MarginLeft
-                           - Canvas.TextWidth(Items[Index]), H, Items[Index]);
-        taCenter: Canvas.TextOut(Rect.Left + ((Rect.Right - Rect.Left) div 2)
-                                           - (Canvas.TextWidth(Items[Index]) div 2),
-                     H, Items[Index]);
-      end;
+  case FAlignment of
+    taLeftJustify: Canvas.TextOut(Rect.Left + MarginLeft, H, Items[Index]);
+    taRightJustify: Canvas.TextOut(Rect.Right -
+        MarginLeft - Canvas.TextWidth(Items[Index]), H, Items[Index]);
+    taCenter: Canvas.TextOut(Rect.Left + ((Rect.Right - Rect.Left) div
+        2) - (Canvas.TextWidth(Items[Index]) div 2),
+        H, Items[Index]);
+  end;
 end;
 
-procedure TListBox.ClearColor(Index: Integer);
+procedure TListBox.ClearColor(Index: integer);
 begin
-   if (FColors.Count > Index) and (Index > -1) then
-    FColors[ Index ] := Pointer(clNone);
+  if (FColors.Count > Index) and (Index > -1) then
+    FColors[Index] := Pointer(clNone);
 end;
 
-procedure TListBox.ClearFont(Index: Integer);
-  var
-  Font: TFont;
-  i: integer;
+procedure TListBox.ClearFont(Index: integer);
 begin
-  if (Index > Items.Count - 1) or (Index < 0) or (Index > FFonts.Count - 1 )then
-   exit;
+  if (Index > Items.Count - 1) or (Index < 0) or (Index > FFonts.Count - 1) then
+    exit;
 
-  if ( FFonts[ Index ] <> nil ) then
-    TFont(FFonts[ Index ]).Free;
+  if (FFonts[Index] <> nil) then
+    TFont(FFonts[Index]).Free;
 
-  FFonts[ Index ]:= nil;
+  FFonts[Index] := nil;
   Invalidate;
 end;
 
-function TListBox.GetColor(Index: Integer): TColor;
+function TListBox.GetColor(Index: integer): TColor;
 begin
   if (FColors.Count > Index) and (Index > -1) then
-    Result := TColor(FColors[ Index ])
+    Result := TColor(FColors[Index])
   else
     Result := clNone;
 end;
 
-function TListBox.GetFont(Index: Integer): TFont;
-  var
+function TListBox.GetFont(Index: integer): TFont;
+var
   Font: TFont;
   i: integer;
 begin
 
-   if Items.Count < FFonts.Count then
-   begin
-       for i := FFonts.Count - 1 downto Items.Count do
-       begin
-          if FFonts[i] <> nil then
-            TFont(FFonts[i]).Free;
+  if Items.Count < FFonts.Count then
+  begin
+    for i := FFonts.Count - 1 downto Items.Count do
+    begin
+      if FFonts[i] <> nil then
+        TFont(FFonts[i]).Free;
 
-          FFonts.Delete(i);
-       end;
-   end;
+      FFonts.Delete(i);
+    end;
+  end;
 
-   if (Index > Items.Count - 1) or (Index < 0) then
-   begin
-     Result := nil;
-     exit;
-   end;
+  if (Index > Items.Count - 1) or (Index < 0) then
+  begin
+    Result := nil;
+    exit;
+  end;
 
-   if Index > FFonts.Count - 1 then
-   begin
-       Font := TFont.Create;
-       Font.Assign( Self.Font );
-       for i := FFonts.Count to Index - 1 do
-       begin
-          FFonts.Add(nil)
-       end;
-       FFonts.Add(Font);
-       Result := Font;
-       exit;
-   end;
+  if Index > FFonts.Count - 1 then
+  begin
+    Font := TFont.Create;
+    Font.Assign(Self.Font);
+    for i := FFonts.Count to Index - 1 do
+    begin
+      FFonts.Add(nil);
+    end;
+    FFonts.Add(Font);
+    Result := Font;
+    exit;
+  end;
 
-   if FFonts[ Index ] = nil then
-   begin
-     Font := TFont.Create;
-     Font.Assign( Self.Font );
-     FFonts[ Index ] := Font;
-     Result := Font;
-   end else
-     Result := FFonts[ Index ];
+  if FFonts[Index] = nil then
+  begin
+    Font := TFont.Create;
+    Font.Assign(Self.Font);
+    FFonts[Index] := Font;
+    Result := Font;
+  end
+  else
+    Result := FFonts[Index];
 end;
 
-procedure TListBox.SetMarginLeft(const Value: Integer);
+procedure TListBox.SetMarginLeft(const Value: integer);
 begin
   FMarginLeft := Value;
   Invalidate;
 end;
 
-procedure TListBox.SetReadOnly(const Value: Boolean);
+procedure TListBox.SetReadOnly(const Value: boolean);
 begin
   FReadOnly := Value;
   ItemIndex := -1;
@@ -694,24 +695,24 @@ begin
   Invalidate;
 end;
 
-procedure TListBox.SetBorderSelected(const Value: Boolean);
+procedure TListBox.SetBorderSelected(const Value: boolean);
 begin
   FBorderSelected := Value;
   Invalidate;
 end;
 
-procedure TListBox.SetColor(Index: Integer; Color: TColor);
-  var
+procedure TListBox.SetColor(Index: integer; Color: TColor);
+var
   i: integer;
 begin
-   if (Index < 0) or (Index > Items.Count - 1) then
-      exit;
+  if (Index < 0) or (Index > Items.Count - 1) then
+    exit;
 
-   for i := FColors.Count to Items.Count - 1 do
-      FColors.Add(Pointer(clNone));
+  for i := FColors.Count to Items.Count - 1 do
+    FColors.Add(Pointer(clNone));
 
-   FColors[ Index ] := Pointer( Color );
-   Invalidate;
+  FColors[Index] := Pointer(Color);
+  Invalidate;
 end;
 
 procedure TListBox.SetTwoColor(const Value: TColor);
@@ -737,7 +738,7 @@ procedure TCheckBox.DoEnter;
 begin
   if Assigned(FOnFocus) then
     FOnFocus(Self);
-    
+
   inherited;
 end;
 
@@ -745,7 +746,7 @@ procedure TCheckBox.DoExit;
 begin
   if Assigned(FOnBlur) then
     FOnBlur(Self);
-    
+
   inherited;
 end;
 
@@ -806,9 +807,9 @@ end;
 constructor TDropFilesTarget.Create(AOwner: TComponent);
 begin
   inherited;
-  FEnabled := true;
-  if AOwner Is TWinControl then
-      SetTargetControl(TWinControl(AOwner));
+  FEnabled := True;
+  if AOwner is TWinControl then
+    SetTargetControl(TWinControl(AOwner));
 end;
 
 destructor TDropFilesTarget.Destroy;
@@ -832,7 +833,7 @@ end;
 procedure TDropFilesTarget.DropFiles(hDrop: HDROP);
 var
   Info: TDropFilesInfo;
-  Count, Index, Len: Integer;
+  Count, Index, Len: integer;
   Filename: PChar;
 begin
   Info := TDropFilesInfo.Create;
@@ -879,7 +880,7 @@ begin
     if Msg.Msg = WM_DESTROY then
       if FAcceptingWindow <> 0 then
         // Don't clear FAcceptingWindow
-        DragAcceptFiles(FAcceptingWindow, false);
+        DragAcceptFiles(FAcceptingWindow, False);
 
     FOldWndProc(Msg);
 
@@ -891,7 +892,7 @@ begin
       if FAcceptingWindow <> FTargetControl.Handle then
       begin
         FAcceptingWindow := FTargetControl.Handle;
-        DragAcceptFiles(FAcceptingWindow, true);
+        DragAcceptFiles(FAcceptingWindow, True);
       end;
   end;
 end;
@@ -917,7 +918,7 @@ begin
   // that call ReCreateWnd before they even got a handle (-> RichEdit).
   FTargetControl.HandleNeeded;
   FAcceptingWindow := FTargetControl.Handle;
-  DragAcceptFiles(FAcceptingWindow, true);
+  DragAcceptFiles(FAcceptingWindow, True);
 end;
 
 { Detach from FTargetControl: call DragAcceptFiles with Accept=false and
@@ -927,7 +928,7 @@ procedure TDropFilesTarget.DetachControl;
 begin
   if FAcceptingWindow <> 0 then
   begin
-    DragAcceptFiles(FAcceptingWindow, false);
+    DragAcceptFiles(FAcceptingWindow, False);
     FAcceptingWindow := 0;
   end;
 
@@ -938,7 +939,7 @@ begin
   end;
 end;
 
-procedure TDropFilesTarget.SetEnabled(AEnabled: Boolean);
+procedure TDropFilesTarget.SetEnabled(AEnabled: boolean);
 begin
   if FEnabled <> AEnabled then
   begin
@@ -979,8 +980,8 @@ end;
 
 procedure TComponentLabel.CreateParams(var Params: TCreateParams);
 begin
-    inherited CreateParams(Params);
-    Params.ExStyle := Params.ExStyle or WS_EX_NOPARENTNOTIFY;
+  inherited CreateParams(Params);
+  Params.ExStyle := Params.ExStyle or WS_EX_NOPARENTNOTIFY;
 end;
 
 destructor TComponentLabel.Destroy;
@@ -991,22 +992,23 @@ end;
 
 procedure TComponentLabel.Paint;
 begin
- // inherited;
- Visible := FPanel.Visible;
- if not Visible then exit;
+  // inherited;
+  Visible := FPanel.Visible;
+  if not Visible then
+    exit;
 
 
-  Width  :=  Canvas.TextWidth(Caption)+2;
-  Height := Canvas.TextHeight(Caption)+2;
+  Width := Canvas.TextWidth(Caption) + 2;
+  Height := Canvas.TextHeight(Caption) + 2;
 
   Canvas.Pen.Style := psClear;
   Canvas.Pen.Width := 0;
   Canvas.Brush.Color := Color;
-  Canvas.Rectangle(0,0,Width,Height);
-  Canvas.TextOut(1,1, Caption);
+  Canvas.Rectangle(0, 0, Width, Height);
+  Canvas.TextOut(1, 1, Caption);
 end;
 
-procedure TComponentLabel.SetCaption(const Value: String);
+procedure TComponentLabel.SetCaption(const Value: string);
 begin
   FCaption := Value;
 end;
@@ -1020,9 +1022,9 @@ begin
   FGlyph := TBitmap.Create;
   FLabel := TComponentLabel.Create(self);
 
-  FGlyph.Transparent := true;
+  FGlyph.Transparent := True;
   FGlyph.TransparentMode := tmAuto;
-  realWidth  := 25;
+  realWidth := 25;
   realHeight := 25;
   Color := clBtnFace;
 
@@ -1032,29 +1034,30 @@ end;
 destructor __TNoVisual.Destroy;
 begin
 
-//  FLabel.Free;
+  //  FLabel.Free;
   FGlyph.Free;
   inherited;
 end;
 
 procedure __TNoVisual.initLabel;
 begin
-  if Parent = nil then exit;
+  if Parent = nil then
+    exit;
 
- FLabel.Parent := Self.Parent;
- FLabel.Font.Assign(Self.Font);
- FLabel.Color := Color;
- FLabel.Caption := Name;
- FLabel.FPanel := self;
- FLabel.BringToFront;
+  FLabel.Parent := Self.Parent;
+  FLabel.Font.Assign(Self.Font);
+  FLabel.Color := Color;
+  FLabel.Caption := Name;
+  FLabel.FPanel := self;
+  FLabel.BringToFront;
 
- FLabel.Left := Round(Left + (realWidth/2) - (FLabel.Canvas.TextWidth(Name)/2) - 1 );
- FLabel.Top  := Top + Height + 3;
- FLabel.OnDblClick := OnDblClick;
- FLabel.OnClick    := OnClick;
+  FLabel.Left := Round(Left + (realWidth / 2) - (FLabel.Canvas.TextWidth(Name) / 2) - 1);
+  FLabel.Top := Top + Height + 3;
+  FLabel.OnDblClick := OnDblClick;
+  FLabel.OnClick := OnClick;
 end;
 
-procedure __TNoVisual.loadFromFile(fileName: String);
+procedure __TNoVisual.loadFromFile(fileName: string);
 begin
   FfileName := fileName;
   FGlyph.LoadFromFile(fileName);
@@ -1064,39 +1067,40 @@ procedure __TNoVisual.Paint;
 begin
   //if not Visible then exit;
   inherited;
-  if Parent = nil then exit;
-  
+  if Parent = nil then
+    exit;
+
 
   Canvas.Pen.Style := psAlternate;
   Canvas.Pen.Width := 1;
   Canvas.Brush.Color := Color;
-  Canvas.Rectangle(0,0,Width,Height);
+  Canvas.Rectangle(0, 0, Width, Height);
 
   if FLabel <> nil then
   begin
     FLabel.Caption := Name;
-    FLabel.Left := Round(Left + (realWidth/2) - (Canvas.TextWidth(Name)/2) - 1 );
-    FLabel.Top  := Top + Height + 3;
+    FLabel.Left := Round(Left + (realWidth / 2) - (Canvas.TextWidth(Name) / 2) - 1);
+    FLabel.Top := Top + Height + 3;
     FLabel.Paint;
   end;
 
   if not FGlyph.Empty then
   begin
-      Canvas.Draw( Round((Width/2)-(FGlyph.Width/2)),
-                   Round((Height/2)-(FGlyph.Height/2)),
-                   FGlyph );
+    Canvas.Draw(Round((Width / 2) - (FGlyph.Width / 2)),
+      Round((Height / 2) - (FGlyph.Height / 2)),
+      FGlyph);
   end;
 
 end;
 
 
-procedure __TNoVisual.SetCaption(const Value: String);
+procedure __TNoVisual.SetCaption(const Value: string);
 begin
   FCaption := Value;
   initLabel;
 end;
 
-procedure __TNoVisual.SetfileName(const Value: String);
+procedure __TNoVisual.SetfileName(const Value: string);
 begin
   if Value = '' then
     FGlyph.FreeImage
@@ -1114,13 +1118,13 @@ begin
   if FLabel <> nil then
   begin
     FLabel.Caption := Name;
-    FLabel.Left := Round(Left + (realWidth/2) - (Canvas.TextWidth(Name)/2) - 1 );
-    FLabel.Top  := Top + Height + 3;
+    FLabel.Left := Round(Left + (realWidth / 2) - (Canvas.TextWidth(Name) / 2) - 1);
+    FLabel.Top := Top + Height + 3;
     FLabel.Paint;
   end;
 end;
 
-procedure __TNoVisual.SetrealHeight(const Value: Integer);
+procedure __TNoVisual.SetrealHeight(const Value: integer);
 begin
   FrealHeight := Value;
   Height := Value;
@@ -1128,7 +1132,7 @@ begin
   Constraints.MaxHeight := Value;
 end;
 
-procedure __TNoVisual.SetrealWidth(const Value: Integer);
+procedure __TNoVisual.SetrealWidth(const Value: integer);
 begin
   FrealWidth := Value;
   Width := Value;

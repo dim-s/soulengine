@@ -12,3 +12,8 @@ __history/
 *.or
 /ext/php_winres/php_winres.dll
 /ext/php_squall/php_squall.dll
+/output
+/backup
+/build
+/php5ts.dll
+*.exe

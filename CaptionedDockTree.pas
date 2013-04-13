@@ -1180,9 +1180,6 @@ end;
 // У предка всегда устанавливается Visible=true, а в этом классе — НЕТ
 procedure TCustomDockFormEx.DoAddDockClient(Client: TControl;
   const ARect: TRect);
-var
-  S: string;
-  I: Integer;
 begin
   if DockClientCount = 1 then
   begin

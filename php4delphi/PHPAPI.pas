@@ -859,10 +859,6 @@ end;
 function GetPHPVersion: TPHPFileInfo;
 var
   FileName: AnsiString;
-  InfoSize, Wnd: DWORD;
-  VerBuf: Pointer;
-  //FI: PVSFixedFileInfo;
-  VerSize: DWORD;
 begin
   Result.MajorVersion := 0;
   Result.MinorVersion := 0;

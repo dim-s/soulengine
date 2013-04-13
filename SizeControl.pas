@@ -1,37 +1,14 @@
 unit SizeControl;
 
-(* ---------------------------------------------------------------------------*}
+(* ---------------------------------------------------------------------------
 Component Name:  TSizeCtrl
 Module:          SizeControl
 Description:     Enables both moving and resizing of controls at runtime.
-Version:         7.2
-Date:            3-SEP-2006
-Compiler:        Delphi 3, Delphi 7
-Author:          Angus Johnson,   angusj-AT-myrealbox-DOT-com
-Copyright:       © 1997-2006 Angus Johnson
-(* ---------------------------------------------------------------------------*}
-
-(* ---------------------------------------------------------------------------*}
-BASIC USAGE:
-1. Add a TSizeCtrl component (SizeCtrl1) to your form.
-2. Set SizeCtrl1 properties (button colors etc) as desired.
-3. Assign event methods (start, during & end size/move events) as desired.
-4. In the form's OnCreate method, SizeCtrl1.RegisterControl() all possible targets.
-5. In an assigned menuitem method, toggle the SizeCtrl1.Enabled property.
-6. Once enabled:
-     * Click or Tab to select targets.
-     * Hold the Shift key down to select multiple targets.
-     * Resize targets by click & dragging a target's resize buttons
-         or by holding the Shift key down while use the arrow keys.
-     * Move controls by click & dragging a target or by using the arrow keys.
-{* ---------------------------------------------------------------------------*)
-
-(* ---------------------------------------------------------------------------*}
-MISCELLANEOUS NOTES:
-  Capturing the WM_SETCURSOR messages of Listview headers requires hooking
-  the header's message handler too. I don't think this minor improvement in
-  cursor management justifies the considerable extra programming effort.
-{* ---------------------------------------------------------------------------*)
+Version:         8.0 DS
+Date:            19-SEP-2012
+Author:          Dmitriy Zayceff, Angus Johnson, angusj-AT-myrealbox-DOT-com
+Copyright:       © 1997-2006 Angus Johnson, 2009-2013 Dmitriy Zayceff
+ --------------------------------------------------------------------------- *)
 
 interface
 
@@ -41,9 +18,8 @@ uses
   Windows, Messages, SysUtils, Classes, Controls, ExtCtrls,
   Graphics, Forms, TypInfo, Menus, StdCtrls, ComCtrls, Dialogs;
 
-
-  function getAbsoluteX(cntrl: TControl; LastControl: TControl): Integer;
-  function getAbsoluteY(cntrl: TControl; LastControl: TControl): Integer;
+function getAbsoluteX(cntrl: TControl; LastControl: TControl): integer;
+function getAbsoluteY(cntrl: TControl; LastControl: TControl): integer;
 
 type
   TSizeCtrl = class;
@@ -55,14 +31,15 @@ type
 
   TSCState = (scsReady, scsMoving, scsSizing);
 
-  TStartEndEvent = procedure (Sender: TObject; State: TSCState) of object;
-  TDuringEvent = procedure (Sender: TObject; dx, dy: integer; State: TSCState) of object;
-  TMouseDownEvent = procedure (Sender: TObject;
-    Target: TControl; TargetPt: TPoint; var handled: boolean) of object;
-  TSetCursorEvent = procedure (Sender: TObject;
-    Target: TControl; TargetPt: TPoint; var handled: boolean) of object;
+  TStartEndEvent = procedure(Sender: TObject; State: TSCState) of object;
+  TDuringEvent = procedure(Sender: TObject; dx, dy: integer; State: TSCState) of object;
+  TMouseDownEvent = procedure(Sender: TObject; Target: TControl;
+    TargetPt: TPoint; var handled: boolean) of object;
+  TSetCursorEvent = procedure(Sender: TObject; Target: TControl;
+    TargetPt: TPoint; var handled: boolean) of object;
 
-  TContextPopupEvent = procedure(Sender: TObject; MousePos: TPoint; var Handled: Boolean) of object;
+  TContextPopupEvent = procedure(Sender: TObject; MousePos: TPoint;
+    var Handled: boolean) of object;
 
   //TSizeBtn is used internally by TSizeCtrl.
   //There are 8 TSizeBtns for each target which are the target's resize handles.
@@ -74,11 +51,11 @@ type
     procedure Paint; override;
     procedure CreateParams(var Params: TCreateParams); override;
     procedure UpdateBtnCursorAndColor;
-    procedure MouseDown(Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X, Y: integer); override;
   public
-    constructor Create(TargetObj: TTargetObj;
-      BtnPos: TBtnPos); {$IFNDEF VER100} reintroduce; {$ENDIF}
+    constructor Create(TargetObj: TTargetObj; BtnPos: TBtnPos);
+ {$IFNDEF VER100} reintroduce; {$ENDIF}
   end;
 
   TMovePanel = class(TCustomControl)
@@ -98,13 +75,13 @@ type
     fControl: TControl;
     fHooked: boolean;
     fOldWindowProc: TWndMethod;
-    fOldClickMethod : TMethod;
+    fOldClickMethod: TMethod;
     procedure Hook;
     procedure UnHook;
-    procedure NewWindowProc(var Msg : TMessage);
+    procedure NewWindowProc(var Msg: TMessage);
   public
-    constructor Create(aSizeCtrl: TSizeCtrl;
-      aControl: TControl); {$IFNDEF VER100} reintroduce; {$ENDIF}
+    constructor Create(aSizeCtrl: TSizeCtrl; aControl: TControl);
+ {$IFNDEF VER100} reintroduce; {$ENDIF}
     destructor Destroy; override;
   end;
 
@@ -118,19 +95,19 @@ type
     fPanelsNames: TStrings;
     fBtns: array [TBtnPos] of TSizeBtn;
     fFocusRect: TRect;
-    fLastRect : TRect;
+    fLastRect: TRect;
     fStartRec: TRect;
     procedure Hide;
     procedure Show;
     procedure Update;
     procedure StartFocus();
-    function MoveFocus(dx,dy: integer): Boolean;
-    function SizeFocus(dx,dy: integer; BtnPos: TBtnPos): Boolean;
+    function MoveFocus(dx, dy: integer): boolean;
+    function SizeFocus(dx, dy: integer; BtnPos: TBtnPos): boolean;
     procedure EndFocus;
     procedure DrawRect(dc: hDC; obj: TControl);
   public
-    constructor Create(aSizeCtrl: TSizeCtrl;
-      aTarget: TControl); {$IFNDEF VER100} reintroduce; {$ENDIF}
+    constructor Create(aSizeCtrl: TSizeCtrl; aTarget: TControl);
+ {$IFNDEF VER100} reintroduce; {$ENDIF}
     destructor Destroy; override;
   end;
 
@@ -167,16 +144,16 @@ type
     fOnMouseEnter: TMouseDownEvent;
     fOnSetCursor: TSetCursorEvent;
     fOnKeyDown: TKeyEvent;
-    FShowGrid: Boolean;
+    FShowGrid: boolean;
     FgetSelected: TList;
 
-    function GetTargets(index: integer):TControl;
+    function GetTargets(index: integer): TControl;
     function GetTargetCount: integer;
 
     procedure SetEnabled(Value: boolean);
-    procedure WinProc(var Msg : TMessage);
-    procedure FormWindowProc(var Msg : TMessage);
-    procedure DoWindowProc(DefaultProc: TWndMethod; var Msg : TMessage);
+    procedure WinProc(var Msg: TMessage);
+    procedure FormWindowProc(var Msg: TMessage);
+    procedure DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 
     procedure DrawRect;
     procedure SetMoveOnly(Value: boolean);
@@ -188,18 +165,19 @@ type
     procedure SetEnabledBtnColor(aColor: TColor);
     procedure SetDisabledBtnColor(aColor: TColor);
 
-    function RegisteredCtrlFromPt(screenPt: TPoint; ParentX: TWinControl = nil): TControl;
+    function RegisteredCtrlFromPt(screenPt: TPoint;
+      ParentX: TWinControl = nil): TControl;
 
     procedure DoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
     procedure DoMouseMove(Sender: TObject; Shift: TShiftState);
-    procedure SetShowGrid(const Value: Boolean);
+    procedure SetShowGrid(const Value: boolean);
     procedure SetgetSelected(const Value: TList);
   protected
     fGrid: TBitmap; // сетка
     fImage: TImage;
-    lastW: Integer;
-    lastH: Integer; // последн€€ ширина и высота формы
+    lastW: integer;
+    lastH: integer; // последн€€ ширина и высота формы
     lastColor: TColor; // последний цвет формы
     procedure Hide;
     procedure Show;
@@ -207,7 +185,7 @@ type
     procedure MoveTargets(dx, dy: integer);
     procedure SizeTargets(dx, dy: integer);
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    function DoKeyDown(var Message: TWMKey): Boolean;
+    function DoKeyDown(var Message: TWMKey): boolean;
 
     procedure formPaint(Sender: TObject);
   public
@@ -255,10 +233,9 @@ type
     //BtnColor: Color of grab-handle buttons
     property BtnColor: TColor read fEnabledBtnColor write SetEnabledBtnColor;
     //BtnColorDisabled: eg grab buttons along aligned edges of target controls
-    property BtnColorDisabled: TColor read fDisabledBtnColor
-      write SetDisabledBtnColor;
+    property BtnColorDisabled: TColor read fDisabledBtnColor write SetDisabledBtnColor;
 
-    property ShowGrid: Boolean read FShowGrid write SetShowGrid;
+    property ShowGrid: boolean read FShowGrid write SetShowGrid;
     //GridSize: aligns mouse moved/resized controls to nearest grid dimensions
     property GridSize: integer read fGridSize write fGridSize;
     //MultiTargetResize: Resizing of multiple targets is allowed by default
@@ -270,22 +247,23 @@ type
     property OnStartSizeMove: TStartEndEvent read fStartEvent write fStartEvent;
     property OnDuringSizeMove: TDuringEvent read fDuringEvent write fDuringEvent;
     property OnEndSizeMove: TStartEndEvent read fEndEvent write fEndEvent;
-    property OnTargetChange: TNotifyEvent
-      read fTargetChangeEvent write fTargetChangeEvent;
+    property OnTargetChange: TNotifyEvent read fTargetChangeEvent
+      write fTargetChangeEvent;
     property OnKeyDown: TKeyEvent read fOnKeyDown write fOnKeyDown;
     property OnMouseDown: TMouseDownEvent read fOnMouseDown write fOnMouseDown;
     property OnMouseEnter: TMouseDownEvent read fOnMouseEnter write fOnMouseEnter;
     property OnSetCursor: TSetCursorEvent read fOnSetCursor write fOnSetCursor;
-    property OnContextPopup: TContextPopupEvent read fOnContextPopup write fOnContextPopup;
+    property OnContextPopup: TContextPopupEvent
+      read fOnContextPopup write fOnContextPopup;
   end;
 
 const
-  BTNSIZE   = 5;
-  MINWIDTH  = 0;   //minimum target width   (could make this a property later)
+  BTNSIZE = 5;
+  MINWIDTH = 0;   //minimum target width   (could make this a property later)
   MINHEIGHT = 0;   //minimum target height
 
-  CM_LMOUSEDOWN  = WM_USER + $1;
-  CM_RMOUSEDOWN  = WM_USER + $2;
+  CM_LMOUSEDOWN = WM_USER + $1;
+  CM_RMOUSEDOWN = WM_USER + $2;
 
 procedure Register;
 
@@ -302,7 +280,8 @@ begin
   RegisterComponents('Samples', [TSizeCtrl]);
 end;
 
-{$IFDEF VER100} type TAlignSet = set of TAlign; {$ENDIF}
+{$IFDEF VER100} type
+  TAlignSet = set of TAlign; {$ENDIF}
 
 
 //turn warnings off concerning unsafe typecasts since we know they're safe...
@@ -313,36 +292,42 @@ end;
 // Miscellaneous functions
 //------------------------------------------------------------------------------
 
-function getAbsoluteX(cntrl: TControl; LastControl: TControl): Integer;
+function getAbsoluteX(cntrl: TControl; LastControl: TControl): integer;
 begin
-Result := cntrl.Left;
+  Result := cntrl.Left;
 
-if integer(cntrl.Parent) <> integer(LastControl) then
-  Result := Result + getAbsoluteX(cntrl.Parent,LastControl);
+  if integer(cntrl.Parent) <> integer(LastControl) then
+    Result := Result + getAbsoluteX(cntrl.Parent, LastControl);
 end;
 
-function getAbsoluteY(cntrl: TControl; LastControl: TControl): Integer;
+function getAbsoluteY(cntrl: TControl; LastControl: TControl): integer;
 begin
-Result := cntrl.top;
+  Result := cntrl.top;
 
-if integer(cntrl.Parent) <> integer(LastControl) then
-  Result := Result + getAbsoluteY(cntrl.Parent,LastControl);
+  if integer(cntrl.Parent) <> integer(LastControl) then
+    Result := Result + getAbsoluteY(cntrl.Parent, LastControl);
 end;
 
 function max(int1, int2: integer): integer;
 begin
-  if int1 > int2 then result := int1 else result := int2;
+  if int1 > int2 then
+    Result := int1
+  else
+    Result := int2;
 end;
 //------------------------------------------------------------------------------
 
 function IsVisible(Control: TControl): boolean;
 begin
-  result := true;
+  Result := True;
   while assigned(Control) do
-    if Control is TCustomForm then exit
-    else if not Control.Visible then break
-    else Control := Control.Parent;
-  result := false;
+    if Control is TCustomForm then
+      exit
+    else if not Control.Visible then
+      break
+    else
+      Control := Control.Parent;
+  Result := False;
 end;
 //------------------------------------------------------------------------------
 
@@ -352,9 +337,9 @@ begin
   //Not all TControls have handles (ie only TWinControls) so ...
   with Control do
   begin
-    result.TopLeft := parent.ClientToScreen(BoundsRect.TopLeft);
-    result.Right := result.Left + width;
-    result.Bottom := result.Top + height;
+    Result.TopLeft := parent.ClientToScreen(BoundsRect.TopLeft);
+    Result.Right := Result.Left + Width;
+    Result.Bottom := Result.Top + Height;
   end;
 end;
 //------------------------------------------------------------------------------
@@ -362,7 +347,7 @@ end;
 function PointIsInControl(screenPt: TPoint; Control: TControl): boolean;
 begin
   //PointIsInControl() assumes 'Control' is both assigned and has a parent.
-  result := PtInRect(GetBoundsAsScreenRect(Control), screenPt);
+  Result := PtInRect(GetBoundsAsScreenRect(Control), screenPt);
 end;
 //------------------------------------------------------------------------------
 
@@ -370,19 +355,19 @@ end;
 
 function ShiftKeyIsPressed: boolean;
 begin
-  result := GetKeyState(VK_SHIFT) < 0;
+  Result := GetKeyState(VK_SHIFT) < 0;
 end;
 //-----------------------------------------------------------------------
 
 function CtrlKeyIsPressed: boolean;
 begin
-  result := GetKeyState(VK_CONTROL) < 0;
+  Result := GetKeyState(VK_CONTROL) < 0;
 end;
 
 
 function AltKeyIsPressed: boolean;
 begin
-  result := GetKeyState(VK_MENU) < 0;
+  Result := GetKeyState(VK_MENU) < 0;
 end;
 
 
@@ -400,7 +385,7 @@ begin
   end;
 
   with ProposedBoundsRect do
-        Ctrl.SetBounds(left,top,right, bottom)
+    Ctrl.SetBounds(left, top, right, bottom);
 end;
 
 //------------------------------------------------------------------------------
@@ -412,9 +397,10 @@ begin
   inherited Create;
   fSizeCtrl := aSizeCtrl;
   fControl := aControl;
-  
 
-  if fSizeCtrl.Enabled then Hook;
+
+  if fSizeCtrl.Enabled then
+    Hook;
 end;
 //------------------------------------------------------------------------------
 
@@ -429,9 +415,11 @@ procedure TRegisteredObj.Hook;
 var
   meth: TMethod;
 begin
-  if fHooked then exit;
+  if fHooked then
+    exit;
 
-  if fControl is TTabSheet then exit;
+  if fControl is TTabSheet then
+    exit;
 
   fOldWindowProc := fControl.WindowProc;
   fControl.WindowProc := NewWindowProc;
@@ -451,7 +439,7 @@ begin
   end;
   {$ENDIF}
 
-  fHooked := true;
+  fHooked := True;
 end;
 //------------------------------------------------------------------------------
 
@@ -459,8 +447,10 @@ procedure TRegisteredObj.UnHook;
 var
   meth: TMethod;
 begin
-  if not fHooked then exit;
-  if fControl is TTabSheet then exit;
+  if not fHooked then
+    exit;
+  if fControl is TTabSheet then
+    exit;
 
   fControl.WindowProc := fOldWindowProc;
 
@@ -473,14 +463,14 @@ begin
       SetMethodProp(fControl, 'OnClick', meth);
     end;
   except
-  end;  
+  end;
   {$ENDIF}
 
-  fHooked := false;
+  fHooked := False;
 end;
 //------------------------------------------------------------------------------
 
-procedure TRegisteredObj.NewWindowProc(var Msg : TMessage);
+procedure TRegisteredObj.NewWindowProc(var Msg: TMessage);
 begin
   fSizeCtrl.DoWindowProc(fOldWindowProc, Msg);
 end;
@@ -491,13 +481,13 @@ end;
 
 constructor TSizeBtn.Create(TargetObj: TTargetObj; BtnPos: TBtnPos);
 begin
-  inherited create(nil);
+  inherited Create(nil);
   fTargetObj := TargetObj;
   //Parent := TargetObj.fTarget.Parent;
   fPos := BtnPos;
-  width := BTNSIZE;
-  height := BTNSIZE;
-  Visible := false;
+  Width := BTNSIZE;
+  Height := BTNSIZE;
+  Visible := False;
   UpdateBtnCursorAndColor;
 end;
 //------------------------------------------------------------------------------
@@ -516,10 +506,11 @@ begin
   begin
     Cursor := crDefault;
     Color := fTargetObj.fSizeCtrl.fDisabledBtnColor;
-  end else
+  end
+  else
   begin
     case fPos of
-      bpLeft,bpRight: Cursor := crSizeWE;
+      bpLeft, bpRight: Cursor := crSizeWE;
       bpTop, bpBottom: Cursor := crSizeNS;
       bpTopLeft, bpBottomRight: Cursor := crSizeNWSE;
       bpTopRight, bpBottomLeft: Cursor := crSizeNESW;
@@ -529,7 +520,7 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-procedure TSizeBtn.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TSizeBtn.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   if Button = mbLeft then
     fTargetObj.fSizeCtrl.DoMouseDown(self, Button, Shift);
@@ -564,18 +555,18 @@ var
   k: integer;
 begin
   fPanelsNames.Clear;
-  for k:=0 to fPanels.Count-1 do
-      TObject(fPanels[k]).free();
+  for k := 0 to fPanels.Count - 1 do
+    TObject(fPanels[k]).Free();
   fPanels.Clear;
 
   fPanels.Free;
   fPanelsNames.Free;
 
   for i := low(TBtnPos) to high(TBtnPos) do
-    begin
-      if fBtns[i]<>nil then
-          fBtns[i].Free;
-    end;
+  begin
+    if fBtns[i] <> nil then
+      fBtns[i].Free;
+  end;
   inherited Destroy;
 end;
 //------------------------------------------------------------------------------
@@ -584,10 +575,11 @@ procedure TTargetObj.Hide;
 var
   i: TBtnPos;
 begin
-  for i := low(TBtnPos) to high(TBtnPos) do fBtns[i].Visible := false;
+  for i := low(TBtnPos) to high(TBtnPos) do
+    fBtns[i].Visible := False;
   //to avoid the buttons messing up the Size-Move Rect ...
   //if fTarget is TWinControl then fTarget.Refresh
- // else fTarget.Parent.Repaint;
+  // else fTarget.Parent.Repaint;
 end;
 //------------------------------------------------------------------------------
 
@@ -595,7 +587,8 @@ procedure TTargetObj.Show;
 var
   i: TBtnPos;
 begin
-  for i := low(TBtnPos) to high(TBtnPos) do fBtns[i].Visible := true;
+  for i := low(TBtnPos) to high(TBtnPos) do
+    fBtns[i].Visible := True;
 end;
 //------------------------------------------------------------------------------
 
@@ -607,7 +600,8 @@ var
   bsDiv2: integer;
 begin
   parentForm := fSizeCtrl.fParentForm;
-  if not assigned(parentForm) then exit;
+  if not assigned(parentForm) then
+    exit;
 
   //get tl of Target relative to parentForm ...
   tl := GetBoundsAsScreenRect(fTarget).TopLeft;
@@ -623,18 +617,18 @@ begin
       bpTop, bpBottom:
         fBtns[i].Left := fBtns[i].Left + (fTarget.Width div 2);
       bpRight, bpTopRight, bpBottomRight:
-        fBtns[i].Left := fBtns[i].Left + fTarget.Width -1;
+        fBtns[i].Left := fBtns[i].Left + fTarget.Width - 1;
     end;
     fBtns[i].Top := tl.Y - bsDiv2;
     case i of
       bpLeft, bpRight:
         fBtns[i].Top := fBtns[i].Top + (fTarget.Height div 2);
       bpBottomLeft, bpBottom, bpBottomRight:
-        fBtns[i].Top := fBtns[i].Top + fTarget.Height -1;
+        fBtns[i].Top := fBtns[i].Top + fTarget.Height - 1;
     end;
     //force btns to the top ...
 
-    SetWindowPos(fBtns[i].Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE	or SWP_NOSIZE);
+    SetWindowPos(fBtns[i].Handle, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE);
   end;
 end;
 //------------------------------------------------------------------------------
@@ -654,26 +648,28 @@ begin
 end;
 //------------------------------------------------------------------------------
 
-function TTargetObj.MoveFocus(dx,dy: integer): Boolean;
-  Var
-  L,T: Integer;
+function TTargetObj.MoveFocus(dx, dy: integer): boolean;
+var
+  L, T: integer;
 begin
-if fTarget.Tag = 2012 then exit;
+  if fTarget.Tag = 2012 then
+    exit;
 
   L := fFocusRect.Left;
   T := fFocusRect.Top;
   fFocusRect := fStartRec;
-  offsetRect(fFocusRect, dx,dy);
- Result := (L <> fFocusRect.Left)or(T <> fFocusRect.Top);
- //Result := False;
+  offsetRect(fFocusRect, dx, dy);
+  Result := (L <> fFocusRect.Left) or (T <> fFocusRect.Top);
+  //Result := False;
 end;
 //------------------------------------------------------------------------------
 
-function TTargetObj.SizeFocus(dx,dy: integer; BtnPos: TBtnPos): Boolean;
-  Var
-  L,T,R,B: Integer;
+function TTargetObj.SizeFocus(dx, dy: integer; BtnPos: TBtnPos): boolean;
+var
+  L, T, R, B: integer;
 begin
-if fTarget.Tag = 2012 then exit;
+  if fTarget.Tag = 2012 then
+    exit;
 
   L := fFocusRect.Left;
   T := fFocusRect.Top;
@@ -682,51 +678,51 @@ if fTarget.Tag = 2012 then exit;
 
   fFocusRect := fStartRec;
   case BtnPos of
-    bpLeft: inc(fFocusRect.Left, dx);
+    bpLeft: Inc(fFocusRect.Left, dx);
     bpTopLeft:
-      begin
-        inc(fFocusRect.Left, dx);
-        inc(fFocusRect.Top,  dy);
-      end;
-     bpTop: inc(fFocusRect.Top, dy);
-     bpTopRight:
-      begin
-        inc(fFocusRect.Right, dx);
-        inc(fFocusRect.Top, dy);
-      end;
-    bpRight: inc(fFocusRect.Right, dx);
+    begin
+      Inc(fFocusRect.Left, dx);
+      Inc(fFocusRect.Top, dy);
+    end;
+    bpTop: Inc(fFocusRect.Top, dy);
+    bpTopRight:
+    begin
+      Inc(fFocusRect.Right, dx);
+      Inc(fFocusRect.Top, dy);
+    end;
+    bpRight: Inc(fFocusRect.Right, dx);
     bpBottomRight:
-      begin
-        inc(fFocusRect.Right, dx);
-        inc(fFocusRect.Bottom, dy);
-      end;
-    bpBottom: inc(fFocusRect.Bottom, dy);
+    begin
+      Inc(fFocusRect.Right, dx);
+      Inc(fFocusRect.Bottom, dy);
+    end;
+    bpBottom: Inc(fFocusRect.Bottom, dy);
     bpBottomLeft:
-      begin
-        inc(fFocusRect.Left, dx);
-        inc(fFocusRect.Bottom, dy);
-      end;
+    begin
+      Inc(fFocusRect.Left, dx);
+      Inc(fFocusRect.Bottom, dy);
+    end;
   end;
- Result := (L <> fFocusRect.Left) or (R <> fFocusRect.Right)
-  or (T <> fFocusRect.Top) or (B <> fFocusRect.Bottom);
- //Result := False;
+  Result := (L <> fFocusRect.Left) or (R <> fFocusRect.Right) or
+    (T <> fFocusRect.Top) or (B <> fFocusRect.Bottom);
+  //Result := False;
 end;
 //------------------------------------------------------------------------------
 
 procedure TTargetObj.EndFocus;
-  var
-  w,h:integer;
+var
+  w, h: integer;
 begin
   //update target position ...
   //fFocusRect.TopLeft := fTarget.Parent.ScreenToClient(fFocusRect.TopLeft);
- // fFocusRect.BottomRight := fTarget.Parent.ScreenToClient(fFocusRect.BottomRight);
+  // fFocusRect.BottomRight := fTarget.Parent.ScreenToClient(fFocusRect.BottomRight);
 
- w := fFocusRect.Right - fFocusRect.Left;
- h := fFocusRect.Bottom - fFocusRect.Top;
- fFocusRect.Left := fTarget.Left - (fStartRec.Left - fFocusRect.Left);
- fFocusRect.Top  :=  fTarget.Top - (fStartRec.Top - fFocusRect.Top);
- fFocusRect.Right := fFocusRect.Left + w;
- fFocusRect.Bottom := fFocusRect.Top + h;
+  w := fFocusRect.Right - fFocusRect.Left;
+  h := fFocusRect.Bottom - fFocusRect.Top;
+  fFocusRect.Left := fTarget.Left - (fStartRec.Left - fFocusRect.Left);
+  fFocusRect.Top := fTarget.Top - (fStartRec.Top - fFocusRect.Top);
+  fFocusRect.Right := fFocusRect.Left + w;
+  fFocusRect.Bottom := fFocusRect.Top + h;
 
   with fFocusRect do
     AlignToGrid(fTarget, Rect(Left, top, max(MINWIDTH, right - left),
@@ -737,7 +733,7 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TTargetObj.DrawRect(dc: hDC; obj: TControl);
-  var
+var
   pr: TWinControl;
   //panel: TForm;
   panel: TMovePanel;
@@ -745,21 +741,23 @@ procedure TTargetObj.DrawRect(dc: hDC; obj: TControl);
   k: integer;
   ts: boolean;
 begin
-  if fTarget.Tag = 2012 then exit;
+  if fTarget.Tag = 2012 then
+    exit;
 
   fLastRect := fFocusRect;
   pr := obj.Parent;
 
   s := IntToStr(integer(obj));
   k := Self.fPanelsNames.IndexOf(s);
-  ts := false;
+  ts := False;
   if k > -1 then
-    panel :=  TMovePanel(fPanels[k])
-  else begin
+    panel := TMovePanel(fPanels[k])
+  else
+  begin
 
     panel := TMovePanel.Create(pr);
-    panel.Visible := false;
-    panel.ParentColor := false;
+    panel.Visible := False;
+    panel.ParentColor := False;
     panel.Parent := pr;
 
     {panel.BorderStyle := bsNone;
@@ -777,17 +775,17 @@ begin
     fPanelsNames.Add(IntToStr(integer(obj)));
     fPanels.Add(panel);
     panel.BringToFront;
-    ts := true;
+    ts := True;
   end;
 
   panel.Width := fFocusRect.Right - fFocusRect.Left;
   panel.Height := fFocusRect.Bottom - fFocusRect.Top;
 
   panel.Left := fFocusRect.Left;
-  panel.Top  := fFocusRect.Top;
+  panel.Top := fFocusRect.Top;
 
   if (ts) then
-  panel.Show();
+    panel.Show();
 
 {  if pr is TCustomForm then
     TCustomForm(pr).Canvas.DrawFocusRect(fFocusRect);}
@@ -808,15 +806,15 @@ begin
   fRegList := TList.Create;
   fEnabledBtnColor := clNavy;
   fDisabledBtnColor := clGray;
-  fMultiResize := true;
-  fValidBtns := [bpLeft, bpTopLeft,
-    bpTop, bpTopRight, bpRight, bpBottomRight, bpBottom, bpBottomLeft];
+  fMultiResize := True;
+  fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
+    bpBottomRight, bpBottom, bpBottomLeft];
   fHandle := AllocateHWnd(WinProc);
   fForm := TWinControl(AOwner);
   if fForm is TForm then
-        TForm(fForm).OnPaint := Self.formPaint;
+    TForm(fForm).OnPaint := Self.formPaint;
 {$IFDEF VER100}
-  screen.Cursors[crSize] := loadcursor(hInstance,'NSEW');
+  screen.Cursors[crSize] := loadcursor(hInstance, 'NSEW');
 {$ENDIF}
 end;
 //------------------------------------------------------------------------------
@@ -838,10 +836,12 @@ procedure TSizeCtrl.SetEnabled(Value: boolean);
 var
   i: integer;
 begin
-  if Value = fEnabled then exit;
+  if Value = fEnabled then
+    exit;
 
   fParentForm := GetParentForm(TWinControl(owner));
-  if fParentForm = nil then exit;
+  if fParentForm = nil then
+    exit;
 
   fEnabled := Value;
   ClearTargets;
@@ -849,49 +849,58 @@ begin
   if fEnabled then
   begin
     //hook all registered controls and disable their OnClick events ...
-    for i := 0 to fRegList.Count -1 do TRegisteredObj(fRegList[i]).Hook;
+    for i := 0 to fRegList.Count - 1 do
+      TRegisteredObj(fRegList[i]).Hook;
     //hook the parent form too ...
     fOldWindowProc := fParentForm.WindowProc;
     {fParentForm.WindowProc := FormWindowProc; }
-  end else
+  end
+  else
   begin
     //unhook all registered controls and reenable their OnClick events ...
-    for i := 0 to fRegList.Count -1 do TRegisteredObj(fRegList[i]).UnHook;
+    for i := 0 to fRegList.Count - 1 do
+      TRegisteredObj(fRegList[i]).UnHook;
     //unhook the parent form too ...
-   { fParentForm.WindowProc := fOldWindowProc;  }
+    { fParentForm.WindowProc := fOldWindowProc;  }
   end;
 end;
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.FormWindowProc(var Msg : TMessage);
+procedure TSizeCtrl.FormWindowProc(var Msg: TMessage);
 begin
   DoWindowProc(fOldWindowProc, Msg);
 end;
 //------------------------------------------------------------------------------
 
 //TSizeCtrl's own message handler to process CM_CUSTOM_MSE_DOWN message
-procedure TSizeCtrl.WinProc(var Msg : TMessage);
+procedure TSizeCtrl.WinProc(var Msg: TMessage);
 var
   Button: TMouseButton;
   ShiftState: TShiftState;
 begin
   with Msg do
     if Msg = CM_LMOUSEDOWN then
-    try
-      fLMouseDownPending := false;
-      if bool(WParam) then Button := mbLeft else Button := mbRight;
-      if bool(LParam) then ShiftState := [ssShift] else ShiftState := [];
-      DoMouseDown(nil, Button, ShiftState);
-    except
-      Application.HandleException(Self);
-    end
+      try
+        fLMouseDownPending := False;
+        if bool(WParam) then
+          Button := mbLeft
+        else
+          Button := mbRight;
+        if bool(LParam) then
+          ShiftState := [ssShift]
+        else
+          ShiftState := [];
+        DoMouseDown(nil, Button, ShiftState);
+      except
+        Application.HandleException(Self);
+      end
     else
       Result := DefWindowProc(fHandle, Msg, wParam, lParam);
 end;
 //------------------------------------------------------------------------------
 
 //WindowProc for the 'hooked' form and all 'hooked' controls
-procedure TSizeCtrl.DoWindowProc(DefaultProc: TWndMethod; var Msg : TMessage);
+procedure TSizeCtrl.DoWindowProc(DefaultProc: TWndMethod; var Msg: TMessage);
 var
   i: integer;
   ShiftState: TShiftState;
@@ -903,7 +912,8 @@ var
   //'notified' WM_LBUTTONDOWN messages ...
   procedure PostMouseDownMessage(isLeftBtn, shiftKeyPressed: boolean);
   begin
-    if fLMouseDownPending then exit;
+    if fLMouseDownPending then
+      exit;
 
     if assigned(fOnMouseDown) then
     begin
@@ -911,39 +921,43 @@ var
       regCtrl := RegisteredCtrlFromPt(screenPt);
       if assigned(regCtrl) then
       begin
-        handled := false;
+        handled := False;
         controlPt := regCtrl.ScreenToClient(screenPt);
         fOnMouseDown(self, regCtrl, controlPt, handled);
-        if handled then exit;
+        if handled then
+          exit;
       end;
     end;
 
-    fLMouseDownPending := true;
-    PostMessage(fHandle, CM_LMOUSEDOWN,ord(isLeftBtn),ord(shiftKeyPressed));
+    fLMouseDownPending := True;
+    PostMessage(fHandle, CM_LMOUSEDOWN, Ord(isLeftBtn), Ord(shiftKeyPressed));
   end;
 
 begin
   case Msg.Msg of
-  
+
     WM_MOUSEFIRST .. WM_MOUSELAST:
-      begin
-        ShiftState := KeysToShiftState(Word(TWMMouse(Msg).Keys));
-        case Msg.Msg of
-          WM_LBUTTONDOWN: PostMouseDownMessage(true, ssShift in ShiftState);
-          WM_RBUTTONDOWN: DoPopupMenuStuff;
-          WM_MOUSEMOVE: DoMouseMove(nil, ShiftState);
-          WM_LBUTTONUP: DoMouseUp(nil, mbLeft, ShiftState);
-          //Could also add event handlers for right click events here.
-        end;
-        Msg.Result := 0;
+    begin
+      ShiftState := KeysToShiftState(word(TWMMouse(Msg).Keys));
+      case Msg.Msg of
+        WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState);
+        WM_RBUTTONDOWN: DoPopupMenuStuff;
+        WM_MOUSEMOVE: DoMouseMove(nil, ShiftState);
+        WM_LBUTTONUP: DoMouseUp(nil, mbLeft, ShiftState);
+        //Could also add event handlers for right click events here.
       end;
+      Msg.Result := 0;
+    end;
 
     WM_PARENTNOTIFY:
       if not (TWMParentNotify(Msg).Event in [WM_CREATE, WM_DESTROY]) then
       begin
-        if ShiftKeyIsPressed then ShiftState := [ssShift] else ShiftState := [];
+        if ShiftKeyIsPressed then
+          ShiftState := [ssShift]
+        else
+          ShiftState := [];
         case TWMParentNotify(Msg).Event of
-          WM_LBUTTONDOWN: PostMouseDownMessage(true, ssShift in ShiftState);
+          WM_LBUTTONDOWN: PostMouseDownMessage(True, ssShift in ShiftState);
         end;
         Msg.Result := 0;
       end;
@@ -955,7 +969,7 @@ begin
         getCursorPos(screenPt);
         regCtrl := RegisteredCtrlFromPt(screenPt);
 
-        handled := false;
+        handled := False;
         if assigned(fOnSetCursor) and assigned(regCtrl) then
         begin
           controlPt := regCtrl.ScreenToClient(screenPt);
@@ -966,116 +980,145 @@ begin
         else if TargetIndex(regCtrl) >= 0 then
         begin
 
-          if not IsValidMove then DefaultProc(Msg)
-          else windows.SetCursor(screen.Cursors[crSize]);
+          if not IsValidMove then
+            DefaultProc(Msg)
+          else
+            Windows.SetCursor(screen.Cursors[crSize]);
 
-        end else if assigned(regCtrl) then
-          windows.SetCursor(screen.Cursors[crHandPoint])
+        end
+        else if assigned(regCtrl) then
+          Windows.SetCursor(screen.Cursors[crHandPoint])
         else
           DefaultProc(Msg);
-      end else
+      end
+      else
         DefaultProc(Msg);
 
     WM_GETDLGCODE: Msg.Result := DLGC_WANTTAB;
 
     WM_KEYDOWN:
-      begin
-        Msg.Result := 0;
-        if DoKeyDown(TWMKey(Msg)) then exit;
-        case Msg.WParam of
-          VK_UP:
+    begin
+      Msg.Result := 0;
+      if DoKeyDown(TWMKey(Msg)) then
+        exit;
+      case Msg.WParam of
+        VK_UP:
+          if ShiftKeyIsPressed then
+          begin
+            SizeTargets(0, -1);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsSizing);
+          end
+          else
+          begin
+            MoveTargets(0, -1);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsMoving);
+          end;
+        VK_DOWN:
+          if ShiftKeyIsPressed then
+          begin
+            SizeTargets(0, +1);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsSizing);
+          end
+          else
+          begin
+            MoveTargets(0, +1);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsMoving);
+          end;
+        VK_LEFT:
+          if ShiftKeyIsPressed then
+          begin
+            SizeTargets(-1, 0);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsSizing);
+          end
+          else
+          begin
+            MoveTargets(-1, 0);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsMoving);
+          end;
+        VK_RIGHT:
+          if ShiftKeyIsPressed then
+          begin
+            SizeTargets(+1, 0);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsSizing);
+          end
+          else
+          begin
+            MoveTargets(+1, 0);
+            if assigned(fEndEvent) then
+              fEndEvent(self, scsMoving);
+          end;
+        VK_TAB:
+        begin
+          if fRegList.Count = 0 then
+            exit
+          else if targetCount = 0 then
+            AddTarget(TRegisteredObj(fRegList[0]).fControl)
+          else
+          begin
+            i := RegisteredIndex(Targets[0]);
             if ShiftKeyIsPressed then
-            begin
-              SizeTargets(0,-1);
-              if assigned(fEndEvent) then fEndEvent(self, scsSizing);
-            end else
-            begin
-              MoveTargets(0,-1);
-              if assigned(fEndEvent) then fEndEvent(self, scsMoving);
-            end;
-          VK_DOWN:
-            if ShiftKeyIsPressed then
-            begin
-              SizeTargets(0,+1);
-              if assigned(fEndEvent) then fEndEvent(self, scsSizing);
-            end else
-            begin
-              MoveTargets(0,+1);
-              if assigned(fEndEvent) then fEndEvent(self, scsMoving);
-            end;
-          VK_LEFT:
-            if ShiftKeyIsPressed then
-            begin
-              SizeTargets(-1,0);
-              if assigned(fEndEvent) then fEndEvent(self, scsSizing);
-            end else
-            begin
-              MoveTargets(-1,0);
-              if assigned(fEndEvent) then fEndEvent(self, scsMoving);
-            end;
-          VK_RIGHT:
-            if ShiftKeyIsPressed then
-            begin
-              SizeTargets(+1,0);
-              if assigned(fEndEvent) then fEndEvent(self, scsSizing);
-            end else
-            begin
-              MoveTargets(+1,0);
-              if assigned(fEndEvent) then fEndEvent(self, scsMoving);
-            end;
-          VK_TAB:
-            begin
-              if fRegList.Count = 0 then exit
-              else if targetCount = 0 then
-                AddTarget(TRegisteredObj(fRegList[0]).fControl) else
-              begin
-                i := RegisteredIndex(Targets[0]);
-                if ShiftKeyIsPressed then dec(i) else inc(i);
-                if i < 0 then i := fRegList.Count -1
-                else if i = fRegList.Count then i := 0;
-                ClearTargets;
-                AddTarget(TRegisteredObj(fRegList[i]).fControl);
-              end;
-            end;
-          VK_ESCAPE:
-            //ESCAPE is used for both -
-            //  1. cancelling a mouse move/resize operation, and
-            //  2. selecting the parent of the currenctly selected target
-            if fState <> scsReady then
-            begin
-              fEscCancelled := true;
-              DoMouseUp(nil, mbLeft, []);
-            end else begin
-              if (targetCount = 0) then exit;
-              i := RegisteredIndex(Targets[0].Parent);
-              ClearTargets;
-              if i >= 0 then
-                AddTarget(TRegisteredObj(fRegList[i]).fControl);
-            end;
+              Dec(i)
+            else
+              Inc(i);
+            if i < 0 then
+              i := fRegList.Count - 1
+            else if i = fRegList.Count then
+              i := 0;
+            ClearTargets;
+            AddTarget(TRegisteredObj(fRegList[i]).fControl);
+          end;
         end;
+        VK_ESCAPE:
+          //ESCAPE is used for both -
+          //  1. cancelling a mouse move/resize operation, and
+          //  2. selecting the parent of the currenctly selected target
+          if fState <> scsReady then
+          begin
+            fEscCancelled := True;
+            DoMouseUp(nil, mbLeft, []);
+          end
+          else
+          begin
+            if (targetCount = 0) then
+              exit;
+            i := RegisteredIndex(Targets[0].Parent);
+            ClearTargets;
+            if i >= 0 then
+              AddTarget(TRegisteredObj(fRegList[i]).fControl);
+          end;
       end;
+    end;
 
     WM_KEYUP: Msg.Result := 0;
     WM_CHAR: Msg.Result := 0;
 
-    else DefaultProc(Msg);
+    else
+      DefaultProc(Msg);
   end;
 end;
 //------------------------------------------------------------------------------
 
-function TSizeCtrl.DoKeyDown(var Message: TWMKey): Boolean;
+function TSizeCtrl.DoKeyDown(var Message: TWMKey): boolean;
 var
   ShiftState: TShiftState;
 begin
-  Result := true;
-  if fParentForm.KeyPreview and
-    THackedWinControl(fParentForm).DoKeyDown(Message) then Exit;
+  Result := True;
+  if fParentForm.KeyPreview and THackedWinControl(fParentForm).DoKeyDown(Message) then
+    Exit;
   if Assigned(fOnKeyDown) then
     with Message do
     begin
       ShiftState := KeyDataToShiftState(KeyData);
       fOnKeyDown(Self, CharCode, ShiftState);
-      if CharCode = 0 then Exit;
+      if CharCode = 0 then
+        Exit;
     end;
   Result := False;
 end;
@@ -1084,8 +1127,9 @@ end;
 function TSizeCtrl.GetTargets(index: integer): TControl;
 begin
   if (index < 0) or (index >= TargetCount) then
-    result := nil else
-    result := TTargetObj(fTargetList[index]).fTarget;
+    Result := nil
+  else
+    Result := TTargetObj(fTargetList[index]).fTarget;
 end;
 //------------------------------------------------------------------------------
 
@@ -1093,13 +1137,13 @@ function TSizeCtrl.TargetIndex(Control: TControl): integer;
 var
   i: integer;
 begin
-  
-  result := -1;
+
+  Result := -1;
   if assigned(Control) then
-    for i := 0 to fTargetList.Count -1 do
+    for i := 0 to fTargetList.Count - 1 do
       if TTargetObj(fTargetList[i]).fTarget = Control then
       begin
-        result := i;
+        Result := i;
         break;
       end;
 end;
@@ -1110,22 +1154,25 @@ var
   TargetObj: TTargetObj;
 begin
 
-  result := -1;
-  if (csDestroying in ComponentState) or (fState <> scsReady) then exit;
- 
-  result := TargetIndex(Control);
-  if not assigned(Control) or not Control.Visible or
-    (Control is TCustomForm) or (result >= 0) then exit;
-  result := fTargetList.Count;
+  Result := -1;
+  if (csDestroying in ComponentState) or (fState <> scsReady) then
+    exit;
+
+  Result := TargetIndex(Control);
+  if not assigned(Control) or not Control.Visible or (Control is TCustomForm) or
+    (Result >= 0) then
+    exit;
+  Result := fTargetList.Count;
   TargetObj := TTargetObj.Create(self, Control);
   fTargetList.Add(TargetObj);
-  
+
   UpdateBtnCursors;
   TargetObj.Update;
   TargetObj.Show;
   RegisterControl(Control);
   fParentForm.ActiveControl := nil;
-  if assigned(fTargetChangeEvent) then fTargetChangeEvent(self);
+  if assigned(fTargetChangeEvent) then
+    fTargetChangeEvent(self);
 
   {for i := 0 to fTargetList.Count -1 do
       MessageBox(0,pchar(TTargetObj(fTargetList[i]).fTarget.Name),'',mb_ok);  }
@@ -1137,11 +1184,13 @@ var
   i: integer;
 begin
   i := TargetIndex(Control);
-  if i < 0 then exit;
+  if i < 0 then
+    exit;
   TTargetObj(fTargetList[i]).Free;
   fTargetList.Delete(i);
   UpdateBtnCursors;
-  if assigned(fTargetChangeEvent) then fTargetChangeEvent(self);
+  if assigned(fTargetChangeEvent) then
+    fTargetChangeEvent(self);
 end;
 //------------------------------------------------------------------------------
 
@@ -1149,17 +1198,20 @@ procedure TSizeCtrl.ClearTargets;
 var
   i: integer;
 begin
-  if fTargetList.Count = 0 then exit;
-  for i := 0 to fTargetList.Count -1 do
-    begin
-      if fTargetList[i]<>nil then
-        TTargetObj(fTargetList[i]).Free;
-    end;
+  if fTargetList.Count = 0 then
+    exit;
+  for i := 0 to fTargetList.Count - 1 do
+  begin
+    if fTargetList[i] <> nil then
+      TTargetObj(fTargetList[i]).Free;
+  end;
 
   fTargetList.Clear;
-  if (csDestroying in ComponentState) then exit;
+  if (csDestroying in ComponentState) then
+    exit;
   UpdateBtnCursors;
-  if assigned(fTargetChangeEvent) then fTargetChangeEvent(self);
+  if assigned(fTargetChangeEvent) then
+    fTargetChangeEvent(self);
 end;
 //------------------------------------------------------------------------------
 
@@ -1172,11 +1224,12 @@ begin
     result := -1;
     exit;
   end;}
-  
-  result := RegisteredIndex(Control);
-  if result >= 0 then exit;
 
-  result := fRegList.Count;
+  Result := RegisteredIndex(Control);
+  if Result >= 0 then
+    exit;
+
+  Result := fRegList.Count;
   RegisteredObj := TRegisteredObj.Create(self, Control);
   fRegList.Add(RegisteredObj);
 end;
@@ -1190,7 +1243,8 @@ begin
   DeleteTarget(Control);
   //now unregister it ...
   i := RegisteredIndex(Control);
-  if i < 0 then exit;
+  if i < 0 then
+    exit;
   TRegisteredObj(fRegList[i]).Free;
   fRegList.Delete(i);
 end;
@@ -1203,10 +1257,10 @@ begin
   //first, clear any targets
   ClearTargets;
   //now, clear all registered controls ...
-  for i := 0 to fRegList.Count -1 do
+  for i := 0 to fRegList.Count - 1 do
   begin
     if Assigned(fRegList[i]) then
-        TRegisteredObj(fRegList[i]).Free;
+      TRegisteredObj(fRegList[i]).Free;
   end;
   fRegList.Clear;
 end;
@@ -1216,11 +1270,11 @@ function TSizeCtrl.RegisteredIndex(Control: TControl): integer;
 var
   i: integer;
 begin
-  result := -1;
-  for i := 0 to fRegList.Count -1 do
+  Result := -1;
+  for i := 0 to fRegList.Count - 1 do
     if TRegisteredObj(fRegList[i]).fControl = Control then
     begin
-      result := i;
+      Result := i;
       break;
     end;
 end;
@@ -1234,24 +1288,26 @@ begin
   //nb: If controls overlap at screenPt, then the (top-most) child control
   //is selected if there is a parent-child relationship. Otherwise, simply
   //the first control under screenPt is returned.
-  result := nil;
-  for i := fTargetList.Count -1 downto 0 do
+  Result := nil;
+  for i := fTargetList.Count - 1 downto 0 do
     with TTargetObj(fTargetList[i]) do
     begin
-      if not PointIsInControl(screenPt, fTarget) then continue;
+      if not PointIsInControl(screenPt, fTarget) then
+        continue;
       if not (fTarget is TWinControl) then
       begin
-        result := fTarget;
+        Result := fTarget;
         exit; //ie assume this is top-most since it can't be a parent.
       end
-      else if not assigned(result) then
-        result := fTarget
+      else if not assigned(Result) then
+        Result := fTarget
       else
       begin
         tmpCtrl := TWinControl(fTarget).Parent;
-        while assigned(tmpCtrl) and (tmpCtrl <> result) do
+        while assigned(tmpCtrl) and (tmpCtrl <> Result) do
           tmpCtrl := tmpCtrl.Parent;
-        if assigned(tmpCtrl) then result := fTarget;
+        if assigned(tmpCtrl) then
+          Result := fTarget;
       end;
     end;
 end;
@@ -1259,19 +1315,20 @@ end;
 
 
 function TSizeCtrl.getRegObj(C: TComponent): TRegisteredObj;
-   var
-   i: integer;
+var
+  i: integer;
 begin
-   for i := fRegList.Count -1 downto 0 do
-    begin
-       Result := TRegisteredObj(fRegList[i]);
-       if (integer(Result.fControl) = integer(C)) then
-          exit;
-    end;
-   Result := nil;
+  for i := fRegList.Count - 1 downto 0 do
+  begin
+    Result := TRegisteredObj(fRegList[i]);
+    if (integer(Result.fControl) = integer(C)) then
+      exit;
+  end;
+  Result := nil;
 end;
 
-function TSizeCtrl.RegisteredCtrlFromPt(screenPt: TPoint; ParentX: TWinControl = nil): TControl;
+function TSizeCtrl.RegisteredCtrlFromPt(screenPt: TPoint;
+  ParentX: TWinControl = nil): TControl;
 var
   i: integer;
   rO: TRegisteredObj;
@@ -1280,65 +1337,69 @@ begin
   //nb: If controls overlap at screenPt, then the (top-most) child control
   //is selected if there is a parent-child relationship. Otherwise, simply
   //the first control under screenPt is returned.
-  result := nil;
-  if (ParentX = nil) then ParentX := fForm;
+  Result := nil;
+  if (ParentX = nil) then
+    ParentX := fForm;
 
- // for i := fRegList.Count -1 downto 0 do
-   for i := ParentX.ControlCount -1 downto 0 do
-   begin
+  // for i := fRegList.Count -1 downto 0 do
+  for i := ParentX.ControlCount - 1 downto 0 do
+  begin
 
-   rO := self.getRegObj(ParentX.Controls[i]);
+    rO := self.getRegObj(ParentX.Controls[i]);
 
-   if rO = nil then continue;
+    if rO = nil then
+      continue;
 
 {   if ParentX is TTabSheet then
    Application.MainForm.Caption := Application.MainForm.Caption +','+
         IntToStr(TTabSheet(ParentX).tabIndex);
  }
 
-   if rO.fControl.Parent is TTabSheet then
-   begin
-        if not rO.fControl.Parent.Visible then continue;
-   end;
+    if rO.fControl.Parent is TTabSheet then
+    begin
+      if not rO.fControl.Parent.Visible then
+        continue;
+    end;
 
     with rO do
     begin
 
-
-      if not PointIsInControl(screenPt, fControl) then continue;
+      if not PointIsInControl(screenPt, fControl) then
+        continue;
 
       Result := fControl;
 
       if (Result is TPageControl) then
-          begin
+      begin
 
-                tmp := RegisteredCtrlFromPt(screenPt, TPageControl(Result).ActivePage);
+        tmp := RegisteredCtrlFromPt(screenPt, TPageControl(Result).ActivePage);
 
-                if (tmp <> nil) then begin
+        if (tmp <> nil) then
+        begin
 
-                       Result := tmp;
-                end;
-          end;
+          Result := tmp;
+        end;
+      end;
 
       if (Result is TWinControl) then
-          begin
-              tmp := RegisteredCtrlFromPt(screenPt, (Result as TWinControl));
-              if (tmp <> nil) then
-                 Result := tmp;
-          end;
-
-       exit;
+      begin
+        tmp := RegisteredCtrlFromPt(screenPt, (Result as TWinControl));
+        if (tmp <> nil) then
+          Result := tmp;
       end;
-   end;
 
-   Result := nil;
-    //Application.MainForm.Caption := Result.ClassName;
+      exit;
+    end;
+  end;
+
+  Result := nil;
+  //Application.MainForm.Caption := Result.ClassName;
 end;
 //------------------------------------------------------------------------------
 
 function TSizeCtrl.GetTargetCount: integer;
 begin
-  result := fTargetList.Count;
+  Result := fTargetList.Count;
 end;
 //------------------------------------------------------------------------------
 
@@ -1346,13 +1407,15 @@ procedure TSizeCtrl.MoveTargets(dx, dy: integer);
 var
   i, q, r: integer;
 begin
-  if not IsValidMove then exit;
-  for i := 0 to fTargetList.Count -1 do
+  if not IsValidMove then
+    exit;
+  for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
-     q:=(fTarget.Left + dx) mod GridSize;
-     r:=(fTarget.Top + dy) mod GridSize;
-      with fTarget do SetBounds(Left + dx - q, Top + dy - r, Width, Height);
+      q := (fTarget.Left + dx) mod GridSize;
+      r := (fTarget.Top + dy) mod GridSize;
+      with fTarget do
+        SetBounds(Left + dx - q, Top + dy - r, Width, Height);
       Update;
     end;
 end;
@@ -1360,21 +1423,25 @@ end;
 
 procedure TSizeCtrl.SizeTargets(dx, dy: integer);
 var
-  i, q,r: integer;
+  i, q, r: integer;
 begin
-  if MoveOnly then exit;
-  if (dx <> 0) and not (IsValidSizeBtn(bpLeft) or IsValidSizeBtn(bpRight)) then exit;
-  if (dy <> 0) and not (IsValidSizeBtn(bpBottom) or IsValidSizeBtn(bpTop)) then exit;
+  if MoveOnly then
+    exit;
+  if (dx <> 0) and not (IsValidSizeBtn(bpLeft) or IsValidSizeBtn(bpRight)) then
+    exit;
+  if (dy <> 0) and not (IsValidSizeBtn(bpBottom) or IsValidSizeBtn(bpTop)) then
+    exit;
 
-  for i := 0 to fTargetList.Count -1 do
+  for i := 0 to fTargetList.Count - 1 do
     with TTargetObj(fTargetList[i]) do
     begin
 
-        q := (fTarget.Width + dx) mod GridSize;
-        r := (fTarget.Height + dy) mod GridSize;
+      q := (fTarget.Width + dx) mod GridSize;
+      r := (fTarget.Height + dy) mod GridSize;
 
-      with fTarget do SetBounds(Left, Top,
-        max(MINWIDTH, Width + dx)-q, max(MINHEIGHT, Height + dy)-r);
+      with fTarget do
+        SetBounds(Left, Top,
+          max(MINWIDTH, Width + dx) - q, max(MINHEIGHT, Height + dy) - r);
       Update;
     end;
 end;
@@ -1384,7 +1451,8 @@ procedure TSizeCtrl.Update;
 var
   i: integer;
 begin
-  for i := 0 to fTargetList.Count -1 do TTargetObj(fTargetList[i]).Update;
+  for i := 0 to fTargetList.Count - 1 do
+    TTargetObj(fTargetList[i]).Update;
 end;
 
 procedure TSizeCtrl.UpdateBtns;
@@ -1392,9 +1460,9 @@ var
   i: integer;
   x: TBtnPos;
 begin
-  for i := 0 to fTargetList.Count -1 do
-        for x := low(TBtnPos) to high(TBtnPos) do
-        TTargetObj(fTargetList[i]).fBtns[x].UpdateBtnCursorAndColor;
+  for i := 0 to fTargetList.Count - 1 do
+    for x := low(TBtnPos) to high(TBtnPos) do
+      TTargetObj(fTargetList[i]).fBtns[x].UpdateBtnCursorAndColor;
 end;
 
 //------------------------------------------------------------------------------
@@ -1403,42 +1471,47 @@ procedure TSizeCtrl.DrawRect;
 var
   i: integer;
   dc: hDC;
-//  MaxX,MaxY,MinX,MinY: Integer;
+  //  MaxX,MaxY,MinX,MinY: Integer;
 begin
-  if TargetCount = 0 then exit;
+  if TargetCount = 0 then
+    exit;
   dc := GetDC(0);
   try
-    for i := 0 to TargetCount -1 do
-    // DrawFocusRect(dc,Rect(MinX,MinY,MaxX,MaxY));
-    TTargetObj(fTargetList[i]).DrawRect(dc,TTargetObj(fTargetList[i]).fTarget);
+    for i := 0 to TargetCount - 1 do
+      // DrawFocusRect(dc,Rect(MinX,MinY,MaxX,MaxY));
+      TTargetObj(fTargetList[i]).DrawRect(dc, TTargetObj(fTargetList[i]).fTarget);
   finally
-    ReleaseDC(0,dc);
+    ReleaseDC(0, dc);
   end;
 end;
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.DoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState);
+procedure TSizeCtrl.DoMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState);
 var
   i, targetIdx: integer;
   p: TWinControl;
   parentClientRec: TRect;
   targetObj: TTargetObj;
 begin
-  fEscCancelled := false;
+  fEscCancelled := False;
   GetCursorPos(fStartPt);
 
 
 
   if (Sender is TSizeBtn) then
   begin
-    if  fMoveOnly then exit; //should never happen
+    if fMoveOnly then
+      exit; //should never happen
     targetObj := TSizeBtn(Sender).fTargetObj;
     fCapturedCtrl := targetObj.fTarget;
     fCapturedBtnPos := TSizeBtn(Sender).fPos;
     //make sure we're allowed to size these targets with this button ...
-    if not IsValidSizeBtn(fCapturedBtnPos) then exit;
+    if not IsValidSizeBtn(fCapturedBtnPos) then
+      exit;
     fState := scsSizing;
-  end else
+  end
+  else
   begin
     //First find the top-most control that's clicked ...
     //nb: It's so much simpler to do this here than try and work it out from
@@ -1447,8 +1520,10 @@ begin
     fCapturedCtrl := RegisteredCtrlFromPt(fStartPt);
 
     targetIdx := TargetIndex(fCapturedCtrl);
-    if not (ssShift in Shift) and (targetIdx < 0) then ClearTargets;
-    if not assigned(fCapturedCtrl) then exit;
+    if not (ssShift in Shift) and (targetIdx < 0) then
+      ClearTargets;
+    if not assigned(fCapturedCtrl) then
+      exit;
 
     //if the control isn't a target then add it ...
     if targetIdx < 0 then
@@ -1456,26 +1531,30 @@ begin
 
       AddTarget(fCapturedCtrl);
       exit;
-    //if the control's already a target but the Shift key's pressed then delete it ...
-    end else if (ssShift in Shift) then
+      //if the control's already a target but the Shift key's pressed then delete it ...
+    end
+    else if (ssShift in Shift) then
     begin
       DeleteTarget(fCapturedCtrl);
       fCapturedCtrl := nil;
       exit;
     end;
     fParentForm.ActiveControl := nil;
-    if not IsValidMove then exit;
+    if not IsValidMove then
+      exit;
     targetObj := TTargetObj(fTargetList[targetIdx]);
     fState := scsMoving;
   end;
 
 
-  for i := 0 to TargetCount -1 do begin
+  for i := 0 to TargetCount - 1 do
+  begin
     //TTargetObj(fTargetList[i]).fTarget.Hide;
     TTargetObj(fTargetList[i]).StartFocus();
   end;
 
-  if assigned(fStartEvent) then fStartEvent(self, fState);
+  if assigned(fStartEvent) then
+    fStartEvent(self, fState);
 
   //now calculate and set the clipping region in screen coords ...
   p := targetObj.fTarget.Parent;
@@ -1485,68 +1564,71 @@ begin
   if fState = scsMoving then
   begin
     fClipRec := parentClientRec;
-  end else
-  with targetObj do //ie sizing
-  begin
-    fClipRec := fFocusRect;
-    case TSizeBtn(Sender).fPos of
+  end
+  else
+    with targetObj do //ie sizing
+    begin
+      fClipRec := fFocusRect;
+      case TSizeBtn(Sender).fPos of
         bpLeft: fClipRec.Left := parentClientRec.Left;
-      bpTopLeft:
+        bpTopLeft:
         begin
           fClipRec.Left := parentClientRec.Left;
           fClipRec.Top := parentClientRec.Top;
         end;
-       bpTop: fClipRec.Top := parentClientRec.Top;
-       bpTopRight:
+        bpTop: fClipRec.Top := parentClientRec.Top;
+        bpTopRight:
         begin
           fClipRec.Right := parentClientRec.Right;
           fClipRec.Top := parentClientRec.Top;
         end;
-      bpRight: fClipRec.Right := parentClientRec.Right;
-      bpBottomRight:
+        bpRight: fClipRec.Right := parentClientRec.Right;
+        bpBottomRight:
         begin
           fClipRec.Right := parentClientRec.Right;
           fClipRec.Bottom := parentClientRec.Bottom;
         end;
-      bpBottom: fClipRec.Bottom := parentClientRec.Bottom;
-      bpBottomLeft:
+        bpBottom: fClipRec.Bottom := parentClientRec.Bottom;
+        bpBottomLeft:
         begin
           fClipRec.Left := parentClientRec.Left;
           fClipRec.Bottom := parentClientRec.Bottom;
         end;
+      end;
     end;
-  end;
   //ClipCursor(@fClipRec);
 
   Hide;
   DrawRect;
-  THackedControl(fCapturedCtrl).MouseCapture := true;
+  THackedControl(fCapturedCtrl).MouseCapture := True;
 end;
 //------------------------------------------------------------------------------
 
-function WinVer: Double;
-var WinV: Word;
+function WinVer: double;
+var
+  WinV: word;
 begin
-WinV := GetVersion AND $0000FFFF;
-Result := StrToFloat(IntToStr(Lo(WinV))+DecimalSeparator+IntToStr(Hi(WinV)));
+  WinV := GetVersion and $0000FFFF;
+  Result := StrToFloat(IntToStr(Lo(WinV)) + DecimalSeparator + IntToStr(Hi(WinV)));
 end;
 
 procedure TSizeCtrl.DoMouseMove(Sender: TObject; Shift: TShiftState);
 var
   i, dx, dy: integer;
   newPt: TPoint;
-  Q,R:Integer;
+  Q, R: integer;
 begin
 
-  if (fState = scsReady) or not assigned(fCapturedCtrl) then exit;
-   DrawRect;
+  if (fState = scsReady) or not assigned(fCapturedCtrl) then
+    exit;
+  DrawRect;
 
   GetCursorPos(newPt);
 
   dx := newPt.X - fStartPt.X;
   dy := newPt.Y - fStartPt.Y;
-  Q  := 0;
-  R  := 0;
+  Q := 0;
+  R := 0;
 
   if (fState = scsSizing) then
   begin
@@ -1555,26 +1637,30 @@ begin
       bpTop, bpBottom: dx := 0;
     end;
 
-   if (not AltKeyIsPressed) then
-        begin
-        Q:=Dx mod GridSize;
-        R:=Dy mod GridSize;
-        end;
+    if (not AltKeyIsPressed) then
+    begin
+      Q := Dx mod GridSize;
+      R := Dy mod GridSize;
+    end;
 
-    for i := 0 to TargetCount -1 do
-      TTargetObj(fTargetList[i]).SizeFocus(dx-q,dy-r, fCapturedBtnPos);
-      if assigned(fDuringEvent) then fDuringEvent(self, dx-q, dy-r, fState);
-  end else begin
+    for i := 0 to TargetCount - 1 do
+      TTargetObj(fTargetList[i]).SizeFocus(dx - q, dy - r, fCapturedBtnPos);
+    if assigned(fDuringEvent) then
+      fDuringEvent(self, dx - q, dy - r, fState);
+  end
+  else
+  begin
 
     if (not AltKeyIsPressed) then
-        begin
-        Q:=Dx mod GridSize;
-        R:=Dy mod GridSize;
-        end;
+    begin
+      Q := Dx mod GridSize;
+      R := Dy mod GridSize;
+    end;
 
-    for i := 0 to TargetCount -1 do
-     TTargetObj(fTargetList[i]).MoveFocus(dx-q,dy-r);
-     if assigned(fDuringEvent) then fDuringEvent(self, dx-q, dy-r, fState);
+    for i := 0 to TargetCount - 1 do
+      TTargetObj(fTargetList[i]).MoveFocus(dx - q, dy - r);
+    if assigned(fDuringEvent) then
+      fDuringEvent(self, dx - q, dy - r, fState);
   end;
   //windows.SetCursor(screen.Cursors[crHandPoint]);
   DrawRect;
@@ -1584,35 +1670,38 @@ end;
 procedure TSizeCtrl.DoMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState);
 var
-  i,k: integer;
+  i, k: integer;
   list: TList;
-//  t: Integer;
+  //  t: Integer;
 begin
-  if fState = scsReady then exit;
+  if fState = scsReady then
+    exit;
   DrawRect;
   ClipCursor(nil);
-  THackedControl(fCapturedCtrl).MouseCapture := false;
+  THackedControl(fCapturedCtrl).MouseCapture := False;
   fCapturedCtrl := nil;
   if not fEscCancelled then
-    for i := 0 to TargetCount -1 do begin
+    for i := 0 to TargetCount - 1 do
+    begin
       //TTargetObj(fTargetList[i]).fTarget.Show;
       TTargetObj(fTargetList[i]).EndFocus;
       TTargetObj(fTargetList[i]).fPanelsNames.Clear;
-          list := TTargetObj(fTargetList[i]).fPanels;
-          for k:=0 to list.Count-1 do
-           TObject(list[k]).free();
-          list.Clear;
+      list := TTargetObj(fTargetList[i]).fPanels;
+      for k := 0 to list.Count - 1 do
+        TObject(list[k]).Free();
+      list.Clear;
     end;
 
-//  t := GetTickCount;
+  //  t := GetTickCount;
 
-  fEscCancelled := false;
-  if assigned(fEndEvent) then fEndEvent(self, fState);
+  fEscCancelled := False;
+  if assigned(fEndEvent) then
+    fEndEvent(self, fState);
 
   Show;
   fState := scsReady;
 
- // windows.SetCursor(screen.Cursors[crDefault]);
+  // windows.SetCursor(screen.Cursors[crDefault]);
 end;
 //------------------------------------------------------------------------------
 
@@ -1620,7 +1709,7 @@ procedure TSizeCtrl.Hide;
 {var
   i: integer;
 }begin
- // for i := 0 to TargetCount -1 do TTargetObj(fTargetList[i]).Hide;
+  // for i := 0 to TargetCount -1 do TTargetObj(fTargetList[i]).Hide;
 end;
 //------------------------------------------------------------------------------
 
@@ -1628,7 +1717,7 @@ procedure TSizeCtrl.Show;
 {var
   i: integer;
 }begin
- // for i := 0 to TargetCount -1 do TTargetObj(fTargetList[i]).Show;
+  // for i := 0 to TargetCount -1 do TTargetObj(fTargetList[i]).Show;
 end;
 //------------------------------------------------------------------------------
 
@@ -1640,25 +1729,30 @@ begin
 
   if fMultiResize or (TargetCount = 1) then
   begin
-    fValidBtns := [bpLeft, bpTopLeft,
-      bpTop, bpTopRight, bpRight, bpBottomRight, bpBottom, bpBottomLeft];
-    for i := 0 to TargetCount -1 do
+    fValidBtns := [bpLeft, bpTopLeft, bpTop, bpTopRight, bpRight,
+      bpBottomRight, bpBottom, bpBottomLeft];
+    for i := 0 to TargetCount - 1 do
       case TTargetObj(fTargetList[i]).fTarget.Align of
-        alTop: fValidBtns := fValidBtns - [bpLeft, bpTopLeft, bpTop, bpTopRight,
-          bpRight, bpBottomRight, bpBottomLeft];
-        alBottom: fValidBtns := fValidBtns - [bpLeft, bpTopLeft, bpTopRight,
-          bpRight, bpBottomRight, bpBottom, bpBottomLeft];
-        alLeft: fValidBtns := fValidBtns - [bpLeft, bpTopLeft, bpTop, bpTopRight,
-          bpBottomRight, bpBottom, bpBottomLeft];
-        alRight: fValidBtns := fValidBtns - [bpTopLeft, bpTop, bpTopRight,
-          bpRight, bpBottomRight, bpBottom, bpBottomLeft];
+        alTop: fValidBtns := fValidBtns - [bpLeft, bpTopLeft, bpTop,
+            bpTopRight, bpRight, bpBottomRight, bpBottomLeft];
+        alBottom: fValidBtns :=
+            fValidBtns - [bpLeft, bpTopLeft, bpTopRight, bpRight,
+            bpBottomRight, bpBottom, bpBottomLeft];
+        alLeft: fValidBtns := fValidBtns - [bpLeft, bpTopLeft, bpTop,
+            bpTopRight, bpBottomRight, bpBottom, bpBottomLeft];
+        alRight: fValidBtns :=
+            fValidBtns - [bpTopLeft, bpTop, bpTopRight, bpRight,
+            bpBottomRight, bpBottom, bpBottomLeft];
         alClient: fValidBtns := [];
-        {$IFNDEF VER100}alCustom: fValidBtns := []; {$ENDIF}
+        {$IFNDEF VER100}
+        alCustom: fValidBtns := [];
+{$ENDIF}
       end;
-  end else
+  end
+  else
     fValidBtns := [];
 
-  for i := 0 to TargetCount -1 do
+  for i := 0 to TargetCount - 1 do
     with TTargetObj(fTargetList[i]) do
       for j := low(TBtnPos) to high(TBtnPos) do
         fBtns[j].UpdateBtnCursorAndColor;
@@ -1667,7 +1761,8 @@ end;
 
 procedure TSizeCtrl.SetMoveOnly(Value: boolean);
 begin
-  if  fMoveOnly = Value then exit;
+  if fMoveOnly = Value then
+    exit;
   fMoveOnly := Value;
   UpdateBtnCursors;
 end;
@@ -1675,8 +1770,8 @@ end;
 
 function TSizeCtrl.IsValidSizeBtn(BtnPos: TBtnPos): boolean;
 begin
-  result := (TargetCount > 0) and
-    (TTargetObj(fTargetList[0]).fBtns[BtnPos].Cursor <> crDefault);
+  Result := (TargetCount > 0) and (TTargetObj(fTargetList[0]).fBtns[BtnPos].Cursor <>
+    crDefault);
 end;
 //------------------------------------------------------------------------------
 
@@ -1684,16 +1779,18 @@ function TSizeCtrl.IsValidMove: boolean;
 var
   i: integer;
 begin
-  result := false;
-  for i := 0 to TargetCount -1 do
-    if (TTargetObj(fTargetList[i]).fTarget.Align <> alNone) then exit;
-  result := true;
+  Result := False;
+  for i := 0 to TargetCount - 1 do
+    if (TTargetObj(fTargetList[i]).fTarget.Align <> alNone) then
+      exit;
+  Result := True;
 end;
 //------------------------------------------------------------------------------
 
 procedure TSizeCtrl.SetMultiResize(Value: boolean);
 begin
-  if Value = fMultiResize then exit;
+  if Value = fMultiResize then
+    exit;
   fMultiResize := Value;
   UpdateBtnCursors;
 end;
@@ -1701,7 +1798,8 @@ end;
 
 procedure TSizeCtrl.SetEnabledBtnColor(aColor: TColor);
 begin
-  if fEnabledBtnColor = aColor then exit;
+  if fEnabledBtnColor = aColor then
+    exit;
   fEnabledBtnColor := aColor;
   UpdateBtnCursors;
 end;
@@ -1709,7 +1807,8 @@ end;
 
 procedure TSizeCtrl.SetDisabledBtnColor(aColor: TColor);
 begin
-  if fDisabledBtnColor = aColor then exit;
+  if fDisabledBtnColor = aColor then
+    exit;
   fDisabledBtnColor := aColor;
   UpdateBtnCursors;
 end;
@@ -1718,16 +1817,17 @@ end;
 procedure TSizeCtrl.SetPopupMenu(Value: TPopupMenu);
 begin
   fPopupMenu := Value;
-  if Value = nil then exit;
+  if Value = nil then
+    exit;
   Value.FreeNotification(Self);
 end;
 //------------------------------------------------------------------------------
 
-procedure TSizeCtrl.Notification(AComponent: TComponent;
-  Operation: TOperation);
+procedure TSizeCtrl.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and(AComponent = PopupMenu) then PopupMenu := nil;
+  if (Operation = opRemove) and (AComponent = PopupMenu) then
+    PopupMenu := nil;
 end;
 //------------------------------------------------------------------------------
 
@@ -1737,13 +1837,17 @@ var
   pt: TPoint;
   targetCtrl: TControl;
 begin
-  if not assigned(fPopupMenu) then exit;
+  if not assigned(fPopupMenu) then
+    exit;
   GetCursorPos(pt);
   targetCtrl := TargetCtrlFromPt(pt);
-  if not assigned(targetCtrl) then exit;
-  Handled := false;
-  if Assigned(FOnContextPopup) then fOnContextPopup(Self, pt, Handled);
-  if Handled then exit;
+  if not assigned(targetCtrl) then
+    exit;
+  Handled := False;
+  if Assigned(FOnContextPopup) then
+    fOnContextPopup(Self, pt, Handled);
+  if Handled then
+    exit;
   THackedControl(owner).SendCancelMode(nil);
   fPopupMenu.PopupComponent := targetCtrl;
   PopupMenu.Popup(Pt.X, Pt.Y);
@@ -1751,46 +1855,51 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TSizeCtrl.formPaint(Sender: TObject);
-  var
-  i,j, w, h:integer;
+var
+  i, j, w, h: integer;
   c, g: TColor;
 begin
-if not Assigned(Self) then
+  if not Assigned(Self) then
     exit;
 
-if not ShowGrid then exit;
-if GridSize<5 then exit;
-
-w := TControl(Sender).Width;
-h := TControl(Sender).Height;
-c := TForm(Sender).Color;
-
-if (fGrid<>nil) and (lastW=w) and (lastH=h) and (lastColor=c) then
-begin
-//  exit;
-end;
-
-if not Assigned(fForm) then
+  if not ShowGrid then
     exit;
-               
-lastW := w; lastH := h; lastColor := c;
-g := GetGValue(TForm(fForm).Color);
+  if GridSize < 5 then
+    exit;
+
+  w := TControl(Sender).Width;
+  h := TControl(Sender).Height;
+  c := TForm(Sender).Color;
+
+  if (fGrid <> nil) and (lastW = w) and (lastH = h) and (lastColor = c) then
+  begin
+    //  exit;
+  end;
+
+  if not Assigned(fForm) then
+    exit;
+
+  lastW := w;
+  lastH := h;
+  lastColor := c;
+  g := GetGValue(TForm(fForm).Color);
 
   if fGrid = nil then
     fGrid := TBitmap.Create;
 
-  fGrid.Width  := w;
+  fGrid.Width := w;
   fGrid.Height := h;
   fGrid.Canvas.Brush.Color := c;
   fGrid.Canvas.Pen.Style := psClear;
-  fGrid.Canvas.Rectangle(0,0, w+1, h+1);
-  for i:=0 to w div GridSize do
-   for j:=0 to h div GridSize do begin
-    if g < 180 then
-        fGrid.Canvas.Pixels[I*GridSize,J*GridSize]:= clWhite
-    else
-        fGrid.Canvas.Pixels[I*GridSize,J*GridSize]:= clGray;
-   end;
+  fGrid.Canvas.Rectangle(0, 0, w + 1, h + 1);
+  for i := 0 to w div GridSize do
+    for j := 0 to h div GridSize do
+    begin
+      if g < 180 then
+        fGrid.Canvas.Pixels[I * GridSize, J * GridSize] := clWhite
+      else
+        fGrid.Canvas.Pixels[I * GridSize, J * GridSize] := clGray;
+    end;
 
   {if fImage = nil then
   begin
@@ -1810,13 +1919,13 @@ g := GetGValue(TForm(fForm).Color);
   fImage.Picture.Bitmap.Height := h;
   fImage.Picture.Bitmap.Canvas.Draw(0,0,fGrid);
    }
-  TForm(Sender).Canvas.Draw(0,0, fGrid);
+  TForm(Sender).Canvas.Draw(0, 0, fGrid);
 
   //fGrid.Canvas.CopyRect(Rect(0,0,w,h), TForm(Sender).Canvas, Rect(0,0,w,h));
 
 end;
 
-procedure TSizeCtrl.SetShowGrid(const Value: Boolean);
+procedure TSizeCtrl.SetShowGrid(const Value: boolean);
 begin
   FShowGrid := Value;
 end;
@@ -1827,72 +1936,74 @@ begin
 end;
 
 function TSizeCtrl.getSelected: TList;
-   var
-   i: integer;
+var
+  i: integer;
 begin
-   Result := TList.Create;
-   for i:=0 to fTargetList.Count-1 do
-        begin
-            Result.Add(TTargetObj(fTargetList[i]).fTarget);
-        end;
+  Result := TList.Create;
+  for i := 0 to fTargetList.Count - 1 do
+  begin
+    Result.Add(TTargetObj(fTargetList[i]).fTarget);
+  end;
 end;
 
 procedure TSizeCtrl.toBack(CNTR: TControl);
-   var
-   i,x: integer;
-   res: TRegisteredObj;
-   newList: TList;
+var
+  i, x: integer;
+  res: TRegisteredObj;
+  newList: TList;
 begin
-newList := TList.Create;
-   for i := 0 to fRegList.Count -1 do
+  newList := TList.Create;
+  for i := 0 to fRegList.Count - 1 do
+  begin
+    res := TRegisteredObj(fRegList[i]);
+    if (integer(res.fControl) = integer(CNTR)) then
     begin
-       res := TRegisteredObj(fRegList[i]);
-       if (integer(res.fControl) = integer(CNTR)) then
-       begin
-           x := i;
-           break;
-       end;
+      x := i;
+      break;
     end;
+  end;
 
-   for i := 0 to fRegList.Count-1 do
-    begin
-        if i = x then continue;
-        newList.Add(fRegList[i]);
-    end;
+  for i := 0 to fRegList.Count - 1 do
+  begin
+    if i = x then
+      continue;
+    newList.Add(fRegList[i]);
+  end;
 
-    
-   newList.Add(fRegList[x]);
 
-    fRegList.Free;
-    fRegList := newList;
+  newList.Add(fRegList[x]);
+
+  fRegList.Free;
+  fRegList := newList;
 end;
 
 procedure TSizeCtrl.toFront(CNTR: TControl);
-   var
-   i,x: integer;
-   res: TRegisteredObj;
-   newList: TList;
+var
+  i, x: integer;
+  res: TRegisteredObj;
+  newList: TList;
 begin
-newList := TList.Create;
-   for i := fRegList.Count -1 downto 0 do
+  newList := TList.Create;
+  for i := fRegList.Count - 1 downto 0 do
+  begin
+    res := TRegisteredObj(fRegList[i]);
+    if (integer(res.fControl) = integer(CNTR)) then
     begin
-       res := TRegisteredObj(fRegList[i]);
-       if (integer(res.fControl) = integer(CNTR)) then
-       begin
-           x := i;
-       end;
+      x := i;
     end;
+  end;
 
-   for i := fRegList.Count -1 downto 0 do
-    begin
-        if i = x then continue;
-        newList.Add(fRegList[i]);
-    end;
+  for i := fRegList.Count - 1 downto 0 do
+  begin
+    if i = x then
+      continue;
+    newList.Add(fRegList[i]);
+  end;
 
-   newList.Add(fRegList[x]);
+  newList.Add(fRegList[x]);
 
-   fRegList.Free;
-   fRegList := newList;
+  fRegList.Free;
+  fRegList := newList;
 end;
 
 { TMovePanel }
@@ -1914,7 +2025,7 @@ begin
   Canvas.Pen.Style := psDot;
   Canvas.Pen.Width := 1;
   Canvas.Brush.Color := Color;
-  Canvas.Rectangle(0,0,Width,Height);
+  Canvas.Rectangle(0, 0, Width, Height);
   //inherited;
 end;
 
@@ -1922,4 +2033,3 @@ end;
 
 
 end.
-

@@ -5,13 +5,13 @@ interface
 uses SysUtils;
 
 type
-  ValueType = AnsiString;
+  ValueType = ansistring;
 
   THashItem = class
     Twin: THashItem;
     Value: ValueType;
-    function HashCode: Integer; virtual; abstract;
-    function Equals(Item: THashItem): Boolean; reintroduce; virtual; abstract;
+    function HashCode: integer; virtual; abstract;
+    function Equals(Item: THashItem): boolean; reintroduce; virtual; abstract;
   end;
 
   PHashItems = ^THashItems;
@@ -19,80 +19,80 @@ type
 
   THashTable = class
   public
-    FCapacity: Integer;
-    FSize: Integer;
-    FThreshold: Integer;
-    FLoadFactor: Integer; // In percent
+    FCapacity: integer;
+    FSize: integer;
+    FThreshold: integer;
+    FLoadFactor: integer; // In percent
     FItems: PHashItems;
-    procedure Rehash(NewCapacity: Integer);
+    procedure Rehash(NewCapacity: integer);
   protected
     function InternalGet(Item: THashItem): ValueType;
-     function InternalFind(Item: THashItem): THashItem;
+    function InternalFind(Item: THashItem): THashItem;
 
     procedure InternalPut(Item: THashItem);
-    function InternalHasKey(Item: THashItem): Boolean;
+    function InternalHasKey(Item: THashItem): boolean;
     function InternalRemoveKey(Item: THashItem): ValueType;
   public
-    constructor Create(InitCapacity: Integer = 256; LoadFactor: Integer = 75);
+    constructor Create(InitCapacity: integer = 256; LoadFactor: integer = 75);
     destructor Destroy; override;
     procedure Clear;
-    property Capacity: Integer read FCapacity;
-    property Size: Integer read FSize;
+    property Capacity: integer read FCapacity;
+    property Size: integer read FSize;
   end;
 
-   TStringHashItem = class(THashItem)
-      private
-         Key : string;
+  TStringHashItem = class(THashItem)
+  private
+    Key: string;
 
-      public
-         function HashCode : Integer; override;
-         function Equals(Item : THashItem): Boolean; override;
+  public
+    function HashCode: integer; override;
+    function Equals(Item: THashItem): boolean; override;
   end;
 
   TStringHashTable = class(THashTable)
   private
     FTestItem: TStringHashItem;
   public
-    constructor Create(InitCapacity: Integer = 256; LoadFactor: Integer = 75);
+    constructor Create(InitCapacity: integer = 256; LoadFactor: integer = 75);
     destructor Destroy; override;
     function Get(const Key: string): ValueType;
     procedure SetValue(const Key: string; Value: ValueType);
     procedure Put(const Key: string; Value: ValueType);
-    function HasKey(const Key: string): Boolean;
+    function HasKey(const Key: string): boolean;
     function RemoveKey(const Key: string): ValueType;
   end;
 
-   TIntegerHashItem = class(THashItem)
-      private
-         Key: Integer;
+  TIntegerHashItem = class(THashItem)
+  private
+    Key: integer;
 
-      public
-         function HashCode: Integer; override;
-         function Equals(Item: THashItem): Boolean; override;
+  public
+    function HashCode: integer; override;
+    function Equals(Item: THashItem): boolean; override;
   end;
 
   TIntegerHashTable = class(THashTable)
   private
     FTestItem: TIntegerHashItem;
   public
-    constructor Create(InitCapacity: Integer = 256; LoadFactor: Integer = 75);
+    constructor Create(InitCapacity: integer = 256; LoadFactor: integer = 75);
     destructor Destroy; override;
-    function Get(const Key: Integer): ValueType;
-    procedure Put(const Key: Integer; Value: ValueType);
-    function HasKey(const Key: Integer): Boolean;
-    function RemoveKey(const Key: Integer): ValueType;
+    function Get(const Key: integer): ValueType;
+    procedure Put(const Key: integer; Value: ValueType);
+    function HasKey(const Key: integer): boolean;
+    function RemoveKey(const Key: integer): ValueType;
   end;
 
 implementation
 
 var
-  HashTable: array[#0..#255] of Byte;
-  InsensitiveHashTable: array[#0..#255] of Byte;
+  HashTable: array[#0..#255] of byte;
+  InsensitiveHashTable: array[#0..#255] of byte;
 
 procedure InitTables;
 var
-  I, K: Char;
-  Temp: Integer;
+  I, K: char;
+  Temp: integer;
 begin
   for I := #0 to #255 do
   begin
@@ -103,7 +103,7 @@ begin
   for I := #1 to #255 do
   begin
     repeat
-      K := Char(Random(255));
+      K := char(Random(255));
     until K <> #0;
     Temp := HashTable[I];
     HashTable[I] := HashTable[K];
@@ -113,9 +113,9 @@ end;
 
 { THashTable }
 
-constructor THashTable.Create(InitCapacity, LoadFactor: Integer);
+constructor THashTable.Create(InitCapacity, LoadFactor: integer);
 begin
-  if (InitCapacity < 1) or (InitCapacity >= MaxInt div Sizeof(Integer)) then
+  if (InitCapacity < 1) or (InitCapacity >= MaxInt div Sizeof(integer)) then
     raise Exception.CreateFmt('Invalid InitCapacity: %d', [InitCapacity]);
   if (LoadFactor < 0) or (LoadFactor > 100) then
     raise Exception.CreateFmt('Invalid LoadFactor: %d', [LoadFactor]);
@@ -132,7 +132,7 @@ end;
 
 procedure THashTable.Clear;
 var
-  x: Integer;
+  x: integer;
   oldItem, hashItem: THashItem;
 begin
   for x := 0 to FCapacity - 1 do
@@ -186,11 +186,11 @@ begin
   Result := '';
 end;
 
-function THashTable.InternalHasKey(Item: THashItem): Boolean;
+function THashTable.InternalHasKey(Item: THashItem): boolean;
 var
   hashItem: THashItem;
 begin
-  Result := false;
+  Result := False;
 
   hashItem := FItems[Item.HashCode mod FCapacity];
 
@@ -207,7 +207,7 @@ end;
 
 procedure THashTable.InternalPut(Item: THashItem);
 var
-  hash: Integer;
+  hash: integer;
 begin
   Inc(FSize);
 
@@ -225,7 +225,7 @@ end;
 function THashTable.InternalRemoveKey(Item: THashItem): ValueType;
 var
   hashItem, lastItem: THashItem;
-  hash: Integer;
+  hash: integer;
 begin
   hash := Item.HashCode mod FCapacity;
   hashItem := FItems[hash];
@@ -253,9 +253,9 @@ begin
   Result := '';
 end;
 
-procedure THashTable.Rehash(NewCapacity: Integer);
+procedure THashTable.Rehash(NewCapacity: integer);
 var
-  x, hash: Integer;
+  x, hash: integer;
   newItems: PHashItems;
   itm, Twin: THashItem;
 begin
@@ -290,28 +290,32 @@ end;
 
 { TStringHashItem }
 
-function TStringHashItem.Equals(Item: THashItem): Boolean;
+function TStringHashItem.Equals(Item: THashItem): boolean;
 begin
   Result := SameText(Key, TStringHashItem(Item).Key);
 end;
 
-function TStringHashItem.HashCode: Integer;
+function TStringHashItem.HashCode: integer;
 var
-  I: Integer;
+  I: integer;
 begin
   Result := 0;
   for i := 1 to length(Key) do
   begin
-    Result := (Result shr 4) xor (((Result xor InsensitiveHashTable[Key[I]]) and $F) * $80);
-    Result := (Result shr 4) xor (((Result xor (ord(InsensitiveHashTable[Key[I]]) shr 4)) and $F) * $80);
-    if I = 3 then break;
+    Result := (Result shr 4) xor
+      (((Result xor InsensitiveHashTable[Key[I]]) and $F) * $80);
+    Result := (Result shr 4) xor
+      (((Result xor (Ord(InsensitiveHashTable[Key[I]]) shr 4)) and $F) * $80);
+    if I = 3 then
+      break;
   end;
-  if Result = 0 then Result := Length(Key) mod 8 + 1;
+  if Result = 0 then
+    Result := Length(Key) mod 8 + 1;
 end;
 
 { TStringHashTable }
 
-constructor TStringHashTable.Create(InitCapacity, LoadFactor: Integer);
+constructor TStringHashTable.Create(InitCapacity, LoadFactor: integer);
 begin
   inherited;
   FTestItem := TStringHashItem.Create;
@@ -329,7 +333,7 @@ begin
   Result := InternalGet(FTestItem);
 end;
 
-function TStringHashTable.HasKey(const Key: string): Boolean;
+function TStringHashTable.HasKey(const Key: string): boolean;
 begin
   FTestItem.Key := Key;
   Result := InternalHasKey(FTestItem);
@@ -358,13 +362,14 @@ begin
   item := TStringHashItem.Create;
   item.Key := Key;
 
-  ret := TStringHashItem( InternalFind( item ) );
+  ret := TStringHashItem(InternalFind(item));
   if ret <> nil then
   begin
     ret.Value := Value;
     item.Free;
   end
-  else begin
+  else
+  begin
     item.Value := Value;
     InternalPut(item);
   end;
@@ -372,19 +377,19 @@ end;
 
 { TIntegerHashItem }
 
-function TIntegerHashItem.Equals(Item: THashItem): Boolean;
+function TIntegerHashItem.Equals(Item: THashItem): boolean;
 begin
   Result := Key = TIntegerHashItem(Item).Key;
 end;
 
-function TIntegerHashItem.HashCode: Integer;
+function TIntegerHashItem.HashCode: integer;
 begin
   Result := Key;
 end;
 
 { TIntegerHashTable }
 
-constructor TIntegerHashTable.Create(InitCapacity, LoadFactor: Integer);
+constructor TIntegerHashTable.Create(InitCapacity, LoadFactor: integer);
 begin
   inherited;
   FTestItem := TIntegerHashItem.Create;
@@ -396,19 +401,19 @@ begin
   inherited;
 end;
 
-function TIntegerHashTable.Get(const Key: Integer): ValueType;
+function TIntegerHashTable.Get(const Key: integer): ValueType;
 begin
   FTestItem.Key := Key;
   Result := InternalGet(FTestItem);
 end;
 
-function TIntegerHashTable.HasKey(const Key: Integer): Boolean;
+function TIntegerHashTable.HasKey(const Key: integer): boolean;
 begin
   FTestItem.Key := Key;
   Result := InternalHasKey(FTestItem);
 end;
 
-procedure TIntegerHashTable.Put(const Key: Integer; Value: ValueType);
+procedure TIntegerHashTable.Put(const Key: integer; Value: ValueType);
 var
   item: TIntegerHashItem;
 begin
@@ -418,7 +423,7 @@ begin
   InternalPut(item);
 end;
 
-function TIntegerHashTable.RemoveKey(const Key: Integer): ValueType;
+function TIntegerHashTable.RemoveKey(const Key: integer): ValueType;
 begin
   FTestItem.Key := Key;
   Result := InternalRemoveKey(FTestItem);

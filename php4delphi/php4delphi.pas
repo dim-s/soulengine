@@ -1680,7 +1680,6 @@ end;
 procedure TPHPEngine.StartupEngine;
 var
  i : integer;
- ini: PHashTable;
 begin
   if PHPEngine <> Self then
    begin

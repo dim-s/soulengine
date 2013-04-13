@@ -1764,7 +1764,6 @@ end;
 function zend_get_parameters_ex(number: integer; var Params: pzval_array): integer;
 var
   i  : integer;
-  p: pppzval;
 begin
   SetLength(Params, number);
   if number = 0 then

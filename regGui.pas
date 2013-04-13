@@ -7,17 +7,13 @@ interface
   uses Forms, Dialogs, SysUtils, Windows, TypInfo, Classes, Controls, Buttons,
   Messages,
   StdCtrls, CommCtrl, ComCtrls, Menus, ExtCtrls, ExtDlgs, Math, Mask, Grids
-  , Tabs, Graphics, uGuiScreen, MImage, uGuiEvents, mainLCL, ValEdit, cooltrayicon,
+  , Tabs, Graphics, MImage, ValEdit, mainLCL, uGuiScreen, cooltrayicon,
 
   pngimage, dsStdCtrl{, rkSmartTabs}
 
 
-  {$IFDEF C_SMARTTAB}
-  , IceTabSet
-  {$ENDIF}
-
   {$IFDEF ADD_CHROMIUM}
-    ,ceflib, cefvcl, cefgui, htmlview
+    ,ceflib, cefvcl, cefgui
   {$ENDIF}
 
   {$IFDEF ADD_SKINS}
@@ -85,7 +81,6 @@ end;
 function createComponent(aClass: ansistring; aOwner: integer): Integer;
   Var
   Owner: TComponent;
-  cl: ansistring;
   P: TComponentClass;
 begin
 try
@@ -106,6 +101,8 @@ end;
 
 function parentControl(id: integer; parent: integer): integer;
 begin
+Result := 0;
+
   if toObject(id) is TControl then
   if parent = -1 then
       Result := toID(toControl(id).Parent)
@@ -257,11 +254,7 @@ end;
 procedure registerAdditional;
 begin
   registerArr([
-                TImage, TShape, TBevel, TEvents, __TNoVisual
-
-                {$IFDEF C_SMARTTAB}
-                 , TIceTabList, TIceTab, TIceTabSet
-                {$ENDIF}
+                TImage, TShape, TBevel, __TNoVisual
 
                 {$IFDEF C_SIZECONTROL}
                  ,TSizeCtrl
@@ -431,7 +424,7 @@ begin
    {$ENDIF}
 
    {$IFDEF ADD_CHROMIUM}
-        registerArr([TChromium, TChromiumOptions, THtmlViewer]);
+        registerArr([TChromium, TChromiumOptions]);
    {$ENDIF}
    registerVSEditor;
    Registered := true;

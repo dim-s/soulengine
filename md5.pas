@@ -9,11 +9,11 @@ Copyright:   http://www.faqs.org/rfcs/rfc1321.html
 
 {******************************************************************}
 { MD5 Hashsum Evaluation Unit For Borland Delphi }
-{ }
+
 { Copyright © 2002 by Dimka Maslov }
 { E-mail: mainbox@endimus.com, }
 { Web-site: http://www.endimus.com }
-{ }
+
 { Derived from the RSA Data Security, Inc. }
 { MD5 Message-Digest Algorithm described in RFC 1321 }
 { http://www.faqs.org/rfcs/rfc1321.html }
@@ -33,16 +33,16 @@ type
     массив из 16 байт }
   PMD5Digest = ^TMD5Digest;
   TMD5Digest = record
-    case Integer of
-      0: (A, B, C, D: LongInt);
-      1: (v: array[0..15] of Byte);
+    case integer of
+      0: (A, B, C, D: longint);
+      1: (v: array[0..15] of byte);
   end;
 
 
-function xMD5(S: String): String;
-function xMD5_File(F: String): String;
+function xMD5(S: string): string;
+function xMD5_File(F: string): string;
 
-  // вычисление хеш-суммы для строки
+// вычисление хеш-суммы для строки
 function MD5String(const S: string): TMD5Digest;
 
 // вычисление хеш-суммы для файла
@@ -52,13 +52,13 @@ function MD5File(const FileName: string): TMD5Digest;
 function MD5Stream(const Stream: TStream): TMD5Digest;
 
 // вычисление хеш-суммы для произвольного буфера
-function MD5Buffer(const Buffer; Size: Integer): TMD5Digest;
+function MD5Buffer(const Buffer; Size: integer): TMD5Digest;
 
 // преобразование хеш-суммы в строку из шестнадцатеричных цифр
 function MD5DigestToStr(const Digest: TMD5Digest): string;
 
 // сравнение двух хеш-сумм
-function MD5DigestCompare(const Digest1, Digest2: TMD5Digest): Boolean;
+function MD5DigestCompare(const Digest1, Digest2: TMD5Digest): boolean;
 
 implementation
 
@@ -86,27 +86,28 @@ documentation and/or software.
 }
 
 type
-  UINT4 = LongWord;
+  UINT4 = longword;
 
   PArray4UINT4 = ^TArray4UINT4;
   TArray4UINT4 = array[0..3] of UINT4;
   PArray2UINT4 = ^TArray2UINT4;
   TArray2UINT4 = array[0..1] of UINT4;
   PArray16Byte = ^TArray16Byte;
-  TArray16Byte = array[0..15] of Byte;
+  TArray16Byte = array[0..15] of byte;
   PArray64Byte = ^TArray64Byte;
-  TArray64Byte = array[0..63] of Byte;
+  TArray64Byte = array[0..63] of byte;
 
   PByteArray = ^TByteArray;
-  TByteArray = array[0..0] of Byte;
+  TByteArray = array[0..0] of byte;
 
   PUINT4Array = ^TUINT4Array;
   TUINT4Array = array[0..0] of UINT4;
 
   PMD5Context = ^TMD5Context;
+
   TMD5Context = record
     state: TArray4UINT4;
-    count: TArray2UINT4;
+    Count: TArray2UINT4;
     buffer: TArray64Byte;
   end;
 
@@ -129,10 +130,10 @@ const
   S44 = 21;
 
 var
-  Padding: TArray64Byte =
-  ($80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  Padding: TArray64Byte = ($80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 function _F(x, y, z: UINT4): UINT4;
 begin
@@ -187,26 +188,26 @@ begin
   a := a + b;
 end;
 
-procedure MD5Encode(Output: PByteArray; Input: PUINT4Array; Len: LongWord);
+procedure MD5Encode(Output: PByteArray; Input: PUINT4Array; Len: longword);
 var
-  i, j: LongWord;
+  i, j: longword;
 begin
   j := 0;
   i := 0;
   while j < Len do
   begin
-    output[j] := Byte(input[i] and $FF);
-    output[j + 1] := Byte((input[i] shr 8) and $FF);
-    output[j + 2] := Byte((input[i] shr 16) and $FF);
-    output[j + 3] := Byte((input[i] shr 24) and $FF);
+    output[j] := byte(input[i] and $FF);
+    output[j + 1] := byte((input[i] shr 8) and $FF);
+    output[j + 2] := byte((input[i] shr 16) and $FF);
+    output[j + 3] := byte((input[i] shr 24) and $FF);
     Inc(j, 4);
     Inc(i);
   end;
 end;
 
-procedure MD5Decode(Output: PUINT4Array; Input: PByteArray; Len: LongWord);
+procedure MD5Decode(Output: PUINT4Array; Input: PByteArray; Len: longword);
 var
-  i, j: LongWord;
+  i, j: longword;
 begin
   j := 0;
   i := 0;
@@ -219,14 +220,14 @@ begin
   end;
 end;
 
-procedure MD5_memcpy(Output: PByteArray; Input: PByteArray; Len: LongWord);
+procedure MD5_memcpy(Output: PByteArray; Input: PByteArray; Len: longword);
 begin
   Move(Input^, Output^, Len);
 end;
 
-procedure MD5_memset(Output: PByteArray; Value: Integer; Len: LongWord);
+procedure MD5_memset(Output: PByteArray; Value: integer; Len: longword);
 begin
-  FillChar(Output^, Len, Byte(Value));
+  FillChar(Output^, Len, byte(Value));
 end;
 
 procedure MD5Transform(State: PArray4UINT4; Buffer: PArray64Byte);
@@ -326,17 +327,16 @@ begin
   Context.state[3] := $10325476;
 end;
 
-procedure MD5Update(var Context: TMD5Context; Input: PByteArray; InputLen:
-  LongWord);
+procedure MD5Update(var Context: TMD5Context; Input: PByteArray; InputLen: longword);
 var
-  i, index, partLen: LongWord;
+  i, index, partLen: longword;
 
 begin
-  index := LongWord((context.count[0] shr 3) and $3F);
-  Inc(Context.count[0], UINT4(InputLen) shl 3);
-  if Context.count[0] < UINT4(InputLen) shl 3 then
-    Inc(Context.count[1]);
-  Inc(Context.count[1], UINT4(InputLen) shr 29);
+  index := longword((context.Count[0] shr 3) and $3F);
+  Inc(Context.Count[0], UINT4(InputLen) shl 3);
+  if Context.Count[0] < UINT4(InputLen) shl 3 then
+    Inc(Context.Count[1]);
+  Inc(Context.Count[1], UINT4(InputLen) shr 29);
   partLen := 64 - index;
   if inputLen >= partLen then
   begin
@@ -352,17 +352,16 @@ begin
   end
   else
     i := 0;
-  MD5_memcpy(PByteArray(@Context.buffer[index]), PByteArray(@Input[i]), inputLen
-    - i);
+  MD5_memcpy(PByteArray(@Context.buffer[index]), PByteArray(@Input[i]), inputLen - i);
 end;
 
 procedure MD5Final(var Digest: TMD5Digest; var Context: TMD5Context);
 var
-  bits: array[0..7] of Byte;
-  index, padLen: LongWord;
+  bits: array[0..7] of byte;
+  index, padLen: longword;
 begin
-  MD5Encode(PByteArray(@bits), PUINT4Array(@Context.count), 8);
-  index := LongWord((Context.count[0] shr 3) and $3F);
+  MD5Encode(PByteArray(@bits), PUINT4Array(@Context.Count), 8);
+  index := longword((Context.Count[0] shr 3) and $3F);
   if index < 56 then
     padLen := 56 - index
   else
@@ -376,7 +375,7 @@ end;
 
 function MD5DigestToStr(const Digest: TMD5Digest): string;
 var
-  i: Integer;
+  i: integer;
 begin
   Result := '';
   for i := 0 to 15 do
@@ -403,11 +402,11 @@ end;
 function MD5Stream(const Stream: TStream): TMD5Digest;
 var
   Context: TMD5Context;
-  Buffer: array[0..4095] of Byte;
-  Size: Integer;
-  ReadBytes: Integer;
-  TotalBytes: Integer;
-  SavePos: Integer;
+  Buffer: array[0..4095] of byte;
+  Size: integer;
+  ReadBytes: integer;
+  TotalBytes: integer;
+  SavePos: integer;
 begin
   MD5Init(Context);
   Size := Stream.Size;
@@ -426,7 +425,7 @@ begin
   MD5Final(Result, Context);
 end;
 
-function MD5Buffer(const Buffer; Size: Integer): TMD5Digest;
+function MD5Buffer(const Buffer; Size: integer): TMD5Digest;
 var
   Context: TMD5Context;
 begin
@@ -435,7 +434,7 @@ begin
   MD5Final(Result, Context);
 end;
 
-function MD5DigestCompare(const Digest1, Digest2: TMD5Digest): Boolean;
+function MD5DigestCompare(const Digest1, Digest2: TMD5Digest): boolean;
 begin
   Result := False;
   if Digest1.A <> Digest2.A then
@@ -449,14 +448,14 @@ begin
   Result := True;
 end;
 
-function xMD5(S: String): String;
+function xMD5(S: string): string;
 begin
-    Result := LowerCase( MD5DigestToStr(MD5String(S)) );
+  Result := LowerCase(MD5DigestToStr(MD5String(S)));
 end;
 
-function xMD5_File(F: String): String;
+function xMD5_File(F: string): string;
 begin
-    Result := MD5DigestToStr(MD5File(F));
+  Result := MD5DigestToStr(MD5File(F));
 end;
 
 end.
