@@ -256,68 +256,69 @@ type
     record
       name : PAnsiChar;
       pretty_name : PAnsiChar;
-      startup  : TModuleStartupFunc;   //int (*startup)(struct _sapi_module_struct *sapi_module);
-      shutdown : TModuleShutdownFunc;   //int (*shutdown)(struct _sapi_module_struct *sapi_module);
-      activate : pointer;
-      deactivate : pointer;
+
+      startup  : TModuleStartupFunc;
+      //int (*startup)(struct _sapi_module_struct *sapi_module);
+
+      shutdown : TModuleShutdownFunc;
+      //int (*shutdown)(struct _sapi_module_struct *sapi_module);
+
+      activate : Pointer;
+      // int (*activate)(TSRMLS_D);
+
+      deactivate : Pointer;
+      // int (*activate)(TSRMLS_D);
+
       ub_write : pointer;
       flush : pointer;
       stat : pointer;
       getenv : pointer;
+      
       sapi_error : pointer;
+      
       header_handler : pointer;
       send_headers : pointer;
       send_header : pointer;
+      
       read_post : pointer;
       read_cookies : pointer;
+      
       register_server_variables : pointer;
       log_message : pointer;
-      {$IFDEF PHP5}
-      {$IFDEF PHP510}
       get_request_time : pointer;
-      {$ENDIF}
-      {$IFDEF PHP530}
       terminate_process : pointer;
-      {$ENDIF}
-      {$ENDIF}
+
       php_ini_path_override : PAnsiChar;
+
       block_interruptions : pointer;
       unblock_interruptions : pointer;
+
       default_post_reader : pointer;
       treat_data : pointer;
       executable_location : PAnsiChar;
+
       php_ini_ignore : Integer;
-      {******************************}
-      {IMPORTANT:                    }
-      {Please check your php version }
-      {******************************}
-      {$IFDEF PHP4}
-      {$IFDEF PHP433}
+
+      // PHP 5.4
+      php_ini_ignore_cwd : Integer;
+
       get_fd : pointer;
       force_http_10 : pointer;
       get_target_uid : pointer;
       get_target_gid : pointer;
-      ini_defaults : pointer;
-      phpinfo_as_text : integer;
-      {$ENDIF}
-      {$ENDIF}
-      {$IFDEF PHP5}
-      get_fd : pointer;
-      force_http_10 : pointer;
-      get_target_uid : pointer;
-      get_target_gid : pointer;
+      
       input_filter : pointer;
+      
       ini_defaults : pointer;
+      
       phpinfo_as_text : integer;
-      {$IFDEF PHP520}
+
       ini_entries : PAnsiChar;
-      {$ENDIF}
-      {$IFDEF PHP530}
+
       additional_functions: Pointer;
-      input_filter_init : pointer;
-      {$ENDIF}
-      {$ENDIF}
+      input_filter_init : Pointer;
     end;
+
    Tsapi_module_struct = sapi_module_struct;
 
 
