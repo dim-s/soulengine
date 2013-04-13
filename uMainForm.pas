@@ -15,7 +15,6 @@ type
   T__mainForm = class(TForm)
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
   private
     { Private declarations }
   public
@@ -105,7 +104,7 @@ begin
   if selfEnabled then
   begin
 
-    if (xMD5('%*(' + selfScript + '@#78') = selfMD5Hash) then
+    if (xMD5(selfScript) = selfMD5Hash) then
     begin
       __fMain.Button1.Destroy;
       __fMain.MainMenu.Destroy;
@@ -134,10 +133,6 @@ begin
     uPHPMod.SetAsMainForm(__fMain);
     Application.ShowMainForm := True;
     Application.MainFormOnTaskBar := True;
-
-    //_fMain.ShowModal;
-    //Application.Terminate;
-    //Application.MainForm.Close;
   end
   else
     phpMOD.RunFile(ParamStr(2));
@@ -175,7 +170,7 @@ begin
     //selfScript := myDecode(Base64_Decode(selfScript));
     selfModulesHash := EM.ExtractToString('$PHPSOULENGINE\mods.hash');
 
-    if (xMD5('%*(' + EM.ExtractToString('$PHPSOULENGINE\mods') + '@#78') <>
+    if (xMD5(EM.ExtractToString('$PHPSOULENGINE\mods')) <>
       selfModulesHash) then
     begin
       selfMD5Hash := '';
@@ -231,11 +226,10 @@ end;
 
 procedure T__mainForm.WMHotKey(var Msg: TMessage);
 var
-  idHotKey: integer; //идентификатор, но об этом - позже
-  fuModifiers: word; //модификатор MOD_XX
-  uVirtKey: word; //код виртуальной клавиши VK_XX
+  idHotKey: integer;
+  fuModifiers: word;
+  uVirtKey: word; 
 begin
-  // параметры сообщения получаем так:
   idHotkey := Msg.wParam;
   fuModifiers := LOWORD(Msg.lParam);
   uVirtKey := HIWORD(Msg.lParam);
@@ -245,12 +239,6 @@ begin
 
   inherited;
 end;
-
-procedure T__mainForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
-begin
-  //  phpMOD.DataModuleDestroy(nil);
-end;
-
 
 
 end.
