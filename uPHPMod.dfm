@@ -19,7 +19,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions0Execute
       end
       item
         FunctionName = 'component_create'
@@ -33,7 +32,6 @@ object phpMOD: TphpMOD
             Name = 'owner'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions1Execute
       end
       item
         FunctionName = 'cntr_parent'
@@ -47,7 +45,6 @@ object phpMOD: TphpMOD
             Name = 'parent'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions2Execute
       end
       item
         FunctionName = 'obj_free'
@@ -57,7 +54,6 @@ object phpMOD: TphpMOD
             Name = 'obj'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions3Execute
       end
       item
         FunctionName = '__rtii_set'
@@ -75,7 +71,6 @@ object phpMOD: TphpMOD
             Name = 'val'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions4Execute
       end
       item
         FunctionName = '__rtii_get'
@@ -89,7 +84,6 @@ object phpMOD: TphpMOD
             Name = 'prop'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions5Execute
       end
       item
         FunctionName = '__rtii_exists'
@@ -103,7 +97,6 @@ object phpMOD: TphpMOD
             Name = 'prop'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions6Execute
       end
       item
         FunctionName = 'cntr_owner5'
@@ -113,7 +106,6 @@ object phpMOD: TphpMOD
             Name = 'obj'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions7Execute
       end
       item
         FunctionName = '__rtii_link'
@@ -127,7 +119,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions8Execute
       end
       item
         FunctionName = '__rtii_class'
@@ -137,7 +128,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions9Execute
       end
       item
         FunctionName = '__rtii_set_object'
@@ -155,7 +145,6 @@ object phpMOD: TphpMOD
             Name = 'object'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions10Execute
       end
       item
         FunctionName = '__rtii_is_class'
@@ -169,7 +158,6 @@ object phpMOD: TphpMOD
             Name = 'class'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions11Execute
       end
       item
         FunctionName = 'control_repaint'
@@ -179,7 +167,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions12Execute
       end
       item
         FunctionName = 'control_doublebuffer'
@@ -193,7 +180,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions13Execute
       end
       item
         FunctionName = 'convert_file_to_bmp'
@@ -207,7 +193,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions14Execute
       end
       item
         FunctionName = 'object_is_nil'
@@ -217,7 +202,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions15Execute
       end
       item
         FunctionName = 'bitmap_empty'
@@ -227,7 +211,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions16Execute
       end
       item
         FunctionName = 'component_index'
@@ -237,7 +220,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions17Execute
       end
       item
         FunctionName = 'control_helpkeyword'
@@ -251,7 +233,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions18Execute
       end
       item
         FunctionName = 'control_visible'
@@ -265,7 +246,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions19Execute
       end
       item
         FunctionName = 'control_w'
@@ -279,7 +259,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions20Execute
       end
       item
         FunctionName = 'control_h'
@@ -293,7 +272,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions21Execute
       end
       item
         FunctionName = 'control_x'
@@ -307,7 +285,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions22Execute
       end
       item
         FunctionName = 'control_y'
@@ -321,7 +298,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions23Execute
       end
       item
         FunctionName = 'control_hint'
@@ -335,7 +311,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions24Execute
       end
       item
         FunctionName = '__setvarex_old'
@@ -380,7 +355,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions28Execute
       end
       item
         FunctionName = 'control_to_front'
@@ -390,7 +364,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions29Execute
       end
       item
         FunctionName = 'control_to_back'
@@ -400,7 +373,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions30Execute
       end
       item
         FunctionName = 'tabcontrol_indexofxy'
@@ -418,7 +390,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions31Execute
       end
       item
         FunctionName = 'control_maxmin'
@@ -445,7 +416,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions33Execute
       end
       item
         FunctionName = 'component_copy'
@@ -468,7 +438,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions35Execute
       end
       item
         FunctionName = 'control_invalidate'
@@ -478,7 +447,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions36Execute
       end
       item
         FunctionName = 'delay'
@@ -488,7 +456,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions37Execute
       end
       item
         FunctionName = 'fileexists'
@@ -498,7 +465,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions38Execute
       end
       item
         FunctionName = 'show_hint'
@@ -516,7 +482,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions39Execute
       end
       item
         FunctionName = 'datetime_str'
@@ -526,7 +491,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions40Execute
       end
       item
         FunctionName = 'str_datetime'
@@ -536,7 +500,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions41Execute
       end
       item
         FunctionName = 'pagecontrol_activepage'
@@ -550,7 +513,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions42Execute
       end
       item
         FunctionName = 'pagecontrol_pagecount'
@@ -560,7 +522,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions43Execute
       end
       item
         FunctionName = 'pagecontrol_pages'
@@ -574,7 +535,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions44Execute
       end
       item
         FunctionName = 'getabsolutex'
@@ -588,7 +548,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions45Execute
       end
       item
         FunctionName = 'getabsolutey'
@@ -602,7 +561,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions46Execute
       end
       item
         FunctionName = 'control_focused'
@@ -612,7 +570,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions47Execute
       end
       item
         FunctionName = 'idle_enable'
@@ -622,7 +579,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions48Execute
       end
       item
         FunctionName = 'xxxx'
@@ -641,7 +597,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions50Execute
       end
       item
         FunctionName = 'scrollbox_vsshowing'
@@ -681,7 +636,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions54Execute
       end
       item
         FunctionName = 'component_name'
@@ -729,7 +683,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpString
           end>
-        OnExecute = PHPLibraryFunctions58Execute
       end
       item
         FunctionName = 'include_enc2'
@@ -739,7 +692,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions59Execute
       end
       item
         FunctionName = 'novisual_loadfile'
@@ -753,7 +705,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions60Execute
       end
       item
         FunctionName = 'novisual_clear'
@@ -763,7 +714,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions61Execute
       end
       item
         FunctionName = 'tevent_text'
@@ -803,7 +753,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions64Execute
       end
       item
         FunctionName = 'b64_decode'
@@ -817,7 +766,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = PHPLibraryFunctions65Execute
       end
       item
         FunctionName = 'wtime_str'
@@ -906,7 +854,6 @@ object phpMOD: TphpMOD
             Name = 'name'
             ParamType = tpUnknown
           end>
-        OnExecute = guiFunctions3Execute
       end
       item
         FunctionName = 'find_component'
@@ -970,7 +917,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = guiFunctions9Execute
       end
       item
         FunctionName = '______phpfunction1'
@@ -1090,7 +1036,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = libFormsFunctions0Execute
       end
       item
         FunctionName = '__tcursor'
@@ -1127,7 +1072,6 @@ object phpMOD: TphpMOD
             Name = 'form'
             ParamType = tpUnknown
           end>
-        OnExecute = libFormsFunctions3Execute
       end
       item
         FunctionName = 'font_get'
@@ -1215,7 +1159,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = libFormsFunctions9Execute
       end>
     Left = 408
     Top = 128
@@ -1382,42 +1325,6 @@ object phpMOD: TphpMOD
     Left = 408
     Top = 16
   end
-  object libDialogs: TPHPLibrary
-    LibraryName = 'dialogs'
-    Functions = <
-      item
-        FunctionName = 'dialog_execute'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'obj'
-            ParamType = tpUnknown
-          end>
-        OnExecute = libDialogsFunctions0Execute
-      end
-      item
-        FunctionName = 'dialog_items'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = libDialogsFunctions1Execute
-      end
-      item
-        FunctionName = 'dialog_close'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = libDialogsFunctions2Execute
-      end>
-    Left = 408
-    Top = 184
-  end
   object winApi: TPHPLibrary
     LibraryName = 'winApi'
     Functions = <
@@ -1433,7 +1340,6 @@ object phpMOD: TphpMOD
             Name = 'name'
             ParamType = tpUnknown
           end>
-        OnExecute = winApiFunctions0Execute
       end
       item
         FunctionName = 'show_window'
@@ -1447,7 +1353,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = winApiFunctions1Execute
       end
       item
         FunctionName = 'get_key_state'
@@ -1493,7 +1398,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = winApiFunctions4Execute
       end
       item
         FunctionName = 'sendkeys'
@@ -1503,7 +1407,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = winApiFunctions5Execute
       end>
     Left = 536
     Top = 16
@@ -1593,350 +1496,6 @@ object phpMOD: TphpMOD
       end>
     Left = 264
     Top = 72
-  end
-  object _TStreamLib: TPHPLibrary
-    LibraryName = 'TStreamLib'
-    Functions = <
-      item
-        FunctionName = 'tstream_create'
-        Tag = 0
-        Parameters = <>
-        OnExecute = TStreamLibFunctions0Execute
-      end
-      item
-        FunctionName = 'tstream_read'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'self'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'count'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions1Execute
-      end
-      item
-        FunctionName = 'tstream_write'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'self'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'buffer'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'count'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions2Execute
-      end
-      item
-        FunctionName = 'tstream_seek'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'self'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param3'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions3Execute
-      end
-      item
-        FunctionName = 'tstream_read_buffer'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'self'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions4Execute
-      end
-      item
-        FunctionName = 'tstream_write_buffer'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'self'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param3'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions5Execute
-      end
-      item
-        FunctionName = 'tstream_copy_from'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions6Execute
-      end
-      item
-        FunctionName = 'tstream_read_component'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions7Execute
-      end
-      item
-        FunctionName = 'tstream_write_component'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions8Execute
-      end
-      item
-        FunctionName = 'tstream_get_position'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions9Execute
-      end
-      item
-        FunctionName = 'tstream_set_position'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions10Execute
-      end
-      item
-        FunctionName = 'tstream_get_size'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions11Execute
-      end
-      item
-        FunctionName = 'tstream_set_size'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions12Execute
-      end
-      item
-        FunctionName = 'tmstream_create'
-        Tag = 0
-        Parameters = <>
-        OnExecute = TStreamLibFunctions13Execute
-      end
-      item
-        FunctionName = 'tfilestream_create'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'file'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'mode'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions14Execute
-      end
-      item
-        FunctionName = 'object_text2resource'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions15Execute
-      end
-      item
-        FunctionName = 'tstream_read_component_res'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions16Execute
-      end
-      item
-        FunctionName = 'tstream_write_component_res'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param3'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions17Execute
-      end
-      item
-        FunctionName = 'object_resource2text'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = TStreamLibFunctions18Execute
-      end
-      item
-        FunctionName = 'tstream_writestr'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions19Execute
-      end
-      item
-        FunctionName = 'tstream_readstr'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions20Execute
-      end
-      item
-        FunctionName = 'tmstream_loadfile'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions21Execute
-      end
-      item
-        FunctionName = 'tmstream_savefile'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions22Execute
-      end
-      item
-        FunctionName = 'tmstream_loadstream'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions23Execute
-      end
-      item
-        FunctionName = 'tstream_savestream'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _TStreamLibFunctions24Execute
-      end>
-    Left = 264
-    Top = 128
   end
   object _TPictureLib: TPHPLibrary
     Functions = <
@@ -2087,7 +1646,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions12Execute
       end
       item
         FunctionName = 'icon_empty'
@@ -2097,7 +1655,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions13Execute
       end
       item
         FunctionName = 'picture_assign'
@@ -2149,7 +1706,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions17Execute
       end
       item
         FunctionName = 'picture_loadstream'
@@ -2195,7 +1751,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions20Execute
       end
       item
         FunctionName = 'bitmap_loadstr'
@@ -2287,7 +1842,6 @@ object phpMOD: TphpMOD
             Name = 'h'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions26Execute
       end
       item
         FunctionName = 'ds_bmp2jpeg'
@@ -2305,7 +1859,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = _TPictureLibFunctions27Execute
       end>
     Left = 264
     Top = 16
@@ -2729,7 +2282,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions0Execute
       end
       item
         FunctionName = 'win_exit_windows'
@@ -2743,7 +2295,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions1Execute
       end
       item
         FunctionName = 'win_sleep'
@@ -2759,7 +2310,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions3Execute
       end
       item
         FunctionName = 'mci_command'
@@ -2782,7 +2332,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions5Execute
       end
       item
         FunctionName = 'win_delfont'
@@ -2792,7 +2341,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions6Execute
       end
       item
         FunctionName = 'win_tempdir'
@@ -2858,7 +2406,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions11Execute
       end
       item
         FunctionName = 'control_perform'
@@ -2990,7 +2537,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions21Execute
       end
       item
         FunctionName = 'mouse_event'
@@ -3016,7 +2562,6 @@ object phpMOD: TphpMOD
             Name = 'Param5'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions22Execute
       end
       item
         FunctionName = 'clienttoscreen'
@@ -3071,7 +2616,6 @@ object phpMOD: TphpMOD
             Name = 'Param4'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions26Execute
       end
       item
         FunctionName = 'setcurrentdir'
@@ -3091,7 +2635,6 @@ object phpMOD: TphpMOD
             Name = 'Param1'
             ParamType = tpUnknown
           end>
-        OnExecute = OSApiFunctions28Execute
       end
       item
         FunctionName = 'clipboard_settext'
@@ -3765,7 +3308,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = _TSynEditFunctions7Execute
       end
       item
         FunctionName = 'rich_savetofile'
@@ -3779,7 +3321,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = _TSynEditFunctions8Execute
       end
       item
         FunctionName = 'rich_text'
@@ -3793,7 +3334,6 @@ object phpMOD: TphpMOD
             Name = 'Param2'
             ParamType = tpUnknown
           end>
-        OnExecute = _TSynEditFunctions9Execute
       end
       item
         FunctionName = 'rich_command'
@@ -3811,7 +3351,6 @@ object phpMOD: TphpMOD
             Name = 'Param3'
             ParamType = tpUnknown
           end>
-        OnExecute = _TSynEditFunctions10Execute
       end
       item
         FunctionName = 'syncomplete_visible'
@@ -4464,262 +4003,6 @@ object phpMOD: TphpMOD
     Left = 536
     Top = 136
   end
-  object _BackWorker: TPHPLibrary
-    Functions = <
-      item
-        FunctionName = 'backworker_execute'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions0Execute
-      end
-      item
-        FunctionName = 'backworker_stop'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions1Execute
-      end
-      item
-        FunctionName = 'backworker_create'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions2Execute
-      end
-      item
-        FunctionName = 'threads_vars'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions3Execute
-      end
-      item
-        FunctionName = 'thread_enginefile'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions4Execute
-      end
-      item
-        FunctionName = 'is_termited'
-        Tag = 0
-        Parameters = <>
-        OnExecute = _BackWorkerFunctions5Execute
-      end
-      item
-        FunctionName = 'random'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions6Execute
-      end
-      item
-        FunctionName = '__thread_count'
-        Tag = 0
-        Parameters = <>
-      end
-      item
-        FunctionName = 'bw1_start'
-        Tag = 0
-        Parameters = <>
-      end
-      item
-        FunctionName = 'thread_loaded'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-      end
-      item
-        FunctionName = 'thread_init'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions10Execute
-      end
-      item
-        FunctionName = 'thread_start'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions11Execute
-      end
-      item
-        FunctionName = 'thread_code'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions12Execute
-      end
-      item
-        FunctionName = 'thread_stop'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions13Execute
-      end
-      item
-        FunctionName = 'thread_terminate'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions14Execute
-      end
-      item
-        FunctionName = 'thread_priority'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions15Execute
-      end
-      item
-        FunctionName = 'thread_run'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions16Execute
-      end
-      item
-        FunctionName = 'thread_working'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions17Execute
-      end
-      item
-        FunctionName = 'thread_suspend'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions18Execute
-      end
-      item
-        FunctionName = 'thread_resume'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions19Execute
-      end
-      item
-        FunctionName = 'thread_terminateandwaitfor'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions20Execute
-      end
-      item
-        FunctionName = 'thread_free'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions21Execute
-      end
-      item
-        FunctionName = 'thread_var'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions22Execute
-      end
-      item
-        FunctionName = 'thread_eval'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'name'
-            ParamType = tpString
-          end>
-        OnExecute = _BackWorkerFunctions23Execute
-      end
-      item
-        FunctionName = 'thread_create'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _BackWorkerFunctions24Execute
-      end>
-    Left = 536
-    Top = 192
-  end
   object _TTree: TPHPLibrary
     Functions = <
       item
@@ -4815,37 +4098,6 @@ object phpMOD: TphpMOD
         OnExecute = _TTreeFunctions7Execute
       end>
     Left = 168
-    Top = 320
-  end
-  object _Skins: TPHPLibrary
-    Functions = <
-      item
-        FunctionName = 'skins_updateskin'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-      end
-      item
-        FunctionName = 'skins_thirdparty'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param3'
-            ParamType = tpUnknown
-          end>
-      end>
-    Left = 264
     Top = 320
   end
   object _Docking: TPHPLibrary
@@ -5111,56 +4363,5 @@ object phpMOD: TphpMOD
       end>
     Left = 640
     Top = 264
-  end
-  object _Chromium: TPHPLibrary
-    LibraryName = 'Chromium'
-    Functions = <
-      item
-        FunctionName = 'chromium_exec'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'command'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'args'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _ChromiumFunctions0Execute
-      end
-      item
-        FunctionName = 'chromium_free'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end>
-        OnExecute = _ChromiumFunctions1Execute
-      end
-      item
-        FunctionName = 'chromium_prop'
-        Tag = 0
-        Parameters = <
-          item
-            Name = 'Param1'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param2'
-            ParamType = tpUnknown
-          end
-          item
-            Name = 'Param3'
-            ParamType = tpUnknown
-          end>
-      end>
-    Left = 552
-    Top = 368
   end
 end

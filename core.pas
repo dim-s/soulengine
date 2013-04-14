@@ -4,11 +4,13 @@ unit core;
 {$mode objfpc}{$H+}
 {$endif}
 
+{$i 'sDef.inc'}
+
 interface
 
 uses
   Classes, SysUtils, Forms, php4delphi, zendAPI, phpAPI, PHPTypes,
-  regGui, guiComponents, guiForms, guiProperties, dsUtils,
+  regGui, guiComponents, guiForms, guiProperties, guiPHPMod, dsUtils,
 
   {$IFDEF ADD_CHROMIUM}
   guiChromium,
@@ -45,6 +47,7 @@ begin
   else
     mypsvPHP := aPsvPHP;
 
+  InitializePHPMod(myPHPEngine);
   InitializeEventSystem(myPHPEngine);
   InitializeGuiComponents(myPHPEngine);
   InitializeGuiForms(myPHPEngine);

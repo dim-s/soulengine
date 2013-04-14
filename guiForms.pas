@@ -19,7 +19,7 @@ uses
   PHPAPI,
   php4delphi,
   mainLCL,
-  uPhpEvents,
+  uPhpEvents, phpUtils,
   uForms;
 
 procedure InitializeGuiForms(PHPEngine: TPHPEngine);
@@ -45,6 +45,15 @@ procedure gui_SafeMessage(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 procedure gui_Confirm(ht: integer; return_value: pzval; return_value_ptr: pzval;
+  this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
+
+procedure gui_dialogExecute(ht: integer; return_value: pzval; return_value_ptr: pzval;
+  this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
+
+procedure gui_dialogGetItems(ht: integer; return_value: pzval; return_value_ptr: pzval;
+  this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
+
+procedure gui_dialogClose(ht: integer; return_value: pzval; return_value_ptr: pzval;
   this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
 
 implementation
@@ -187,6 +196,49 @@ begin
   dispose_pzval_array(p);
 end;
 
+procedure gui_dialogExecute;
+var p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  ZVAL_BOOL(return_value, TCommonDialog(Z_LVAL(p[0]^)).Execute);
+  dispose_pzval_array(p);
+end;
+
+procedure gui_dialogGetItems;
+var p: pzval_array;
+  obj: TCommonDialog;
+  Files: TStrings;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  obj := TCommonDialog(Z_LVAL(p[0]^));
+
+  Files := nil;
+  if (obj is TOpenDialog) then
+    Files := TOpenDialog(obj).Files
+  else if (obj is TSaveDialog) then
+    Files := TSaveDialog(obj).Files;
+
+  ZVAL_ARRAY(return_value, Files);
+  dispose_pzval_array(p);
+end;
+
+procedure gui_dialogClose;
+var p: pzval_array;
+  obj: TCommonDialog;
+  Files: TStrings;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  obj := TCommonDialog(Z_LVAL(p[0]^));
+
+  if (obj is TFindDialog) then
+    TFindDialog(obj).CloseDialog
+  else if (obj is TReplaceDialog) then
+    TReplaceDialog(obj).CloseDialog;
+
+  dispose_pzval_array(p);
+end;
+
+
 
 procedure InitializeGuiForms(PHPEngine: TPHPEngine);
 begin
@@ -197,6 +249,10 @@ begin
   PHPEngine.AddFunction('gui_message', @gui_Message);
   PHPEngine.AddFunction('gui_safeMessage', @gui_safeMessage);
   PHPEngine.AddFunction('gui_confirm', @gui_confirm);
+
+  PHPEngine.AddFunction('gui_dialogExecute', @gui_dialogExecute);
+  PHPEngine.AddFunction('gui_dialogGetItems', @gui_dialogExecute);
+  PHPEngine.AddFunction('gui_dialogClose', @gui_dialogExecute);
 end;
 
 

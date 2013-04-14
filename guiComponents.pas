@@ -14,7 +14,7 @@ uses
   PHPAPI,
   php4delphi,
   uPhpEvents,
-  pngimage, Graphics, dsStdCtrl;
+  Graphics, dsStdCtrl;
 
 procedure InitializeGuiComponents(PHPEngine: TPHPEngine);
 
@@ -144,22 +144,6 @@ procedure gui_threadDataIsset(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 procedure gui_threadDataUnset(ht: integer; return_value: pzval;
-  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
-  TSRMLS_DC: pointer); cdecl;
-
-procedure gui_btnPNGLoadStr(ht: integer; return_value: pzval;
-  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
-  TSRMLS_DC: pointer); cdecl;
-procedure gui_btnPNGLoadFile(ht: integer; return_value: pzval;
-  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
-  TSRMLS_DC: pointer); cdecl;
-procedure gui_btnPNGGetStr(ht: integer; return_value: pzval;
-  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
-  TSRMLS_DC: pointer); cdecl;
-procedure gui_btnPNGAssign(ht: integer; return_value: pzval;
-  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
-  TSRMLS_DC: pointer); cdecl;
-procedure gui_btnPngIsEmpty(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 
@@ -996,158 +980,6 @@ begin
     TScriptSafeCommand_ThreadDestroy.Create(Pointer(ID));
   end;
   dispose_pzval_array(p);
-end;
-
-
-procedure gui_btnPNGLoadStr;
-var
-  p: pzval_array;
-  O: TObject;
-  M: TStringStream;
-begin
-  if ht < 2 then
-  begin
-    zend_wrong_param_count(TSRMLS_DC);
-    Exit;
-  end;
-  zend_get_parameters_my(ht, p, TSRMLS_DC);
-
-  O := TObject(Z_LVAL(p[0]^));
-  if O <> nil then
-  begin
-    M := TStringStream.Create(Z_STRVAL(p[1]^));
-        {if O is TPngSpeedButton then
-          TPngSpeedButton(O).PngImage.LoadFromStream(M)
-        else if O is TPngBitBtn then
-          TPngBitBtn(O).PngImage.LoadFromStream(M);}
-    M.Free;
-  end;
-  dispose_pzval_array(p);
-end;
-
-procedure gui_btnPNGLoadFile;
-var
-  p: pzval_array;
-  O: TObject;
-  S: string;
-begin
-  if ht < 2 then
-  begin
-    zend_wrong_param_count(TSRMLS_DC);
-    Exit;
-  end;
-  zend_get_parameters_my(ht, p, TSRMLS_DC);
-
-  O := TObject(Z_LVAL(p[0]^));
-  S := Z_STRVAL(p[1]^);
-
-  if O <> nil then
-  begin
-        {if O is TPngSpeedButton then
-          TPngSpeedButton(O).PngImage.LoadFromFile(S)
-        else if O is TPngBitBtn then
-          TPngBitBtn(O).PngImage.LoadFromFile(S); }
-  end;
-  dispose_pzval_array(p);
-end;
-
-procedure gui_btnPNGGetStr;
-var
-  p: pzval_array;
-  O: TObject;
-  S: TStringStream;
-begin
-  if ht < 1 then
-  begin
-    zend_wrong_param_count(TSRMLS_DC);
-    Exit;
-  end;
-  zend_get_parameters_my(ht, p, TSRMLS_DC);
-
-  O := TObject(Z_LVAL(p[0]^));
-  S := TStringStream.Create(#0);
-  if O <> nil then
-  begin
-       { if O is TPngSpeedButton then
-          TPngSpeedButton(O).PngImage.SaveToStream(S)
-        else if O is TPngBitBtn then
-          TPngBitBtn(O).PngImage.SaveToStream(S);  }
-  end;
-
-  ZVAL_STRINGL(return_value, PAnsiChar(S.DataString), S.Size, True);
-  S.Free;
-  dispose_pzval_array(p);
-end;
-
-procedure gui_btnPngIsEmpty;
-var
-  p: pzval_array;
-  O: TObject;
-begin
-  if ht < 1 then
-  begin
-    zend_wrong_param_count(TSRMLS_DC);
-    Exit;
-  end;
-  zend_get_parameters_my(ht, p, TSRMLS_DC);
-
-  O := TObject(Z_LVAL(p[0]^));
-  ZVAL_BOOL(return_value, False);
-
-  if O <> nil then
-  begin
-        {if O is TPngSpeedButton then
-          ZVAL_BOOL(Return_value, not TPngSpeedButton(O).PngImage.Empty)
-        else if O is TPngBitBtn then
-          ZVAL_BOOL(Return_value, not TPngBitBtn(O).PngImage.Empty);}
-  end;
-
-  dispose_pzval_array(p);
-end;
-
-
-
-procedure gui_btnPNGAssign;
-var
-  p: pzval_array;
-  O, D: TObject;
-label
-  _exit;
-begin
-  if ht < 2 then
-  begin
-    zend_wrong_param_count(TSRMLS_DC);
-    Exit;
-  end;
-  zend_get_parameters_my(ht, p, TSRMLS_DC);
-
-  O := TObject(Z_LVAL(p[0]^));
-  D := TObject(Z_LVAL(p[1]^));
-
-  if (O <> nil) and (D <> nil) then
-  begin
-    if D is TPicture then
-    begin
-      if TPicture(D).Graphic is TPNGObject then
-      begin
-
-              {if O is TPngSpeedButton then
-              begin
-                 TPngSpeedButton(O).PngImage.Assign(TPicture(D).Graphic);
-                 TPngSpeedButton(O).Refresh;
-              end
-              else if O is TPngBitBtn then
-                 TPngBitBtn(O).PngImage.Assign(TPicture(D).Graphic);  }
-
-        ZVAL_TRUE(return_value);
-        goto _exit;
-      end;
-    end;
-  end;
-  ZVAL_FALSE(return_value);
-
-  _exit:
-    dispose_pzval_array(p);
 end;
 
 procedure InitializeGuiComponents(PHPEngine: TPHPEngine);

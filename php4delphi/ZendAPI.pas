@@ -20,7 +20,7 @@ unit zendAPI;
 interface
 
 uses
-  Windows, SysUtils, ZendTypes;
+  Windows, SysUtils, ZendTypes, Classes;
 
 const
 {$IFDEF PHP_DEBUG}
@@ -660,13 +660,17 @@ procedure ZVAL_RESOURCE(value: pzval; l: longint);
 procedure ZVAL_BOOL(z: pzval; b: boolean);
 procedure ZVAL_NULL(z: pzval);
 procedure ZVAL_LONG(z: pzval; l: longint);
+procedure ZVAL_OBJECT(z: pzval; o: TObject);
+procedure ZVAL_ARRAY(z: pzval; List: TStrings); overload;
+procedure ZVAL_ARRAY(z: pzval; List: TList); overload;
 procedure ZVAL_DOUBLE(z: pzval; d: double);
 procedure ZVAL_EMPTY_STRING(z: pzval);
 procedure ZVAL_TRUE(z: pzval);
 procedure ZVAL_FALSE(z: pzval);
 
 
-procedure ZVAL_STRING(z: pzval; s: PAnsiChar; duplicate: boolean);
+procedure ZVAL_STRING(z: pzval; s: PAnsiChar; duplicate: boolean); overload;
+procedure ZVAL_STRING(z: pzval; s: String); overload;
 procedure ZVAL_STRINGW(z: pzval; s: PWideChar; duplicate: boolean);
 
 procedure ZVAL_STRINGL(z: pzval; s: PAnsiChar; l: integer; duplicate: boolean);
@@ -748,7 +752,7 @@ var
 
 function object_init(arg: pzval; ce: pzend_class_entry; TSRMLS_DC : pointer) : integer; cdecl; assembler;
 
-function Z_LVAL(z : Pzval) : longint;
+function Z_LVAL(z : Pzval) : integer;
 function Z_BVAL(z : Pzval) : boolean;
 function Z_DVAL(z : Pzval) : double;
 function Z_STRVAL(z : Pzval) : AnsiString;
@@ -861,13 +865,44 @@ begin
   z^.value.lval := l;
 end;
 
+procedure ZVAL_OBJECT(z: pzval; o: TObject);
+begin
+  ZVAL_LONG(z, Integer(o));
+end;
+
+procedure ZVAL_ARRAY(z: pzval; List: TStrings);
+var
+  i: Integer;
+begin
+  z^._type := IS_ARRAY;
+  _array_init(z, nil, 0);
+  zend_hash_init(z.value.ht, 0, nil, @_zval_dtor_func, False);
+
+  if List <> nil then
+  for i := 0 to List.Count - 1 do
+    add_index_stringl(z, i, PAnsiChar(List[i]), Length(List[i]), 1);
+end;
+
+procedure ZVAL_ARRAY(z: pzval; List: TList);
+var
+  i: Integer;
+begin
+  z^._type := IS_ARRAY;
+  _array_init(z, nil, 0);
+  zend_hash_init(z.value.ht, 0, nil, @_zval_dtor_func, False);
+
+  if List <> nil then
+  for i := 0 to List.Count - 1 do
+    add_index_long(z, i, Integer(List[i]));
+end;
+
 procedure ZVAL_DOUBLE(z: pzval; d: double);
 begin
   z^._type := IS_DOUBLE;
   z^.value.dval := d;
 end;
 
-procedure ZVAL_STRING(z: pzval; s: PAnsiChar; duplicate: boolean);
+procedure ZVAL_STRING(z: pzval; s: PAnsiChar; duplicate: boolean); overload;
 var
   __s : PAnsiChar;
 begin
@@ -883,6 +918,11 @@ begin
   else
     z^.value.str.val := __s;
   z^._type := IS_STRING;
+end;
+
+procedure ZVAL_STRING(z: pzval; s: String); overload;
+begin
+  ZVAL_STRINGL(z, PAnsiChar(s), length(s), true);
 end;
 
 procedure ZVAL_STRINGW(z: pzval; s: PWideChar; duplicate: boolean);
@@ -2287,7 +2327,7 @@ asm
 end;
 
 
-function Z_LVAL(z : pzval) : longint;
+function Z_LVAL(z : pzval) : integer;
 begin
   if z = nil then
   begin

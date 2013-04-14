@@ -27,9 +27,16 @@ procedure chromium_allowedcall(ht: integer; return_value: pzval;
 procedure chromium_settings(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
+
 procedure chromium_load(ht: integer; return_value: pzval; return_value_ptr: pzval;
   this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
 
+
+procedure chromium_exec(ht: integer; return_value: pzval; return_value_ptr: pzval;
+  this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
+
+procedure chromium_prop(ht: integer; return_value: pzval; return_value_ptr: pzval;
+  this_ptr: pzval; return_value_used: integer; TSRMLS_DC: pointer); cdecl;
 
 
 type
@@ -44,8 +51,186 @@ type
 
 implementation
 
+type
+  TArrayString = array of string;
+  TArrayVariant = array of variant;
+
 var
   AllowedCall: TStringHashTable;
+
+function ZendToVariant(const Value: pppzval): variant;
+var
+  S: string;
+begin
+  case Value^^^._type of
+    1: Result := Value^^^.Value.lval;
+    2: Result := Value^^^.Value.dval;
+    6:
+    begin
+      S := Value^^^.Value.str.val;
+      Result := S;
+    end;
+  end;
+end;
+
+procedure HashToArray(HT: PHashTable; var AR: TArrayVariant); overload;
+var
+  Len, I: integer;
+  tmp: pppzval;
+begin
+  len := zend_hash_num_elements(HT);
+  SetLength(AR, len);
+  for i := 0 to len - 1 do
+  begin
+    new(tmp);
+    zend_hash_index_find(ht, i, tmp);
+    AR[i] := ZendToVariant(tmp);
+    freemem(tmp);
+  end;
+end;
+
+procedure HashToArray(ZV: pzval; var AR: TArrayVariant); overload;
+begin
+ if ZV^._type = IS_ARRAY then
+    HashToArray(zv^.value.ht, AR)
+  else
+    SetLength(AR, 0);
+end;
+
+procedure chromium_prop;
+  var p: pzval_array;
+    isGet: boolean;
+begin
+  if ht < 3 then begin zend_wrong_param_count(TSRMLS_DC); Exit; end;
+  zend_get_parameters_my(ht, p, TSRMLS_DC);
+
+  isGet := isNull(p[2]);
+  with TChromium(Z_LVAL(p[0]^)) do
+  begin
+    case Z_LVAL(p[1]^) of
+      1: if isGet then
+          ZVAL_DOUBLE(return_value, Browser.ZoomLevel)
+        else
+          Browser.ZoomLevel := Z_DVAL(p[2]^);
+
+      2: ZVAL_STRING(return_value, Browser.MainFrame.Url);
+      3: ZVAL_STRING(return_value, Browser.MainFrame.Source);
+      4: ZVAL_STRING(return_value, Browser.MainFrame.Text);
+    end;
+  end;
+
+  dispose_pzval_array(p);
+end;
+
+procedure chromium_exec;
+  var p: pzval_array;
+    id, i: Integer;
+    tmp: ^ppzval;
+    tmps: array of ^ppzval;
+
+    Req: ICefRequest;
+    Header: ICefStringMap;
+
+    ARR: TArrayVariant;
+begin
+  if ht < 3 then begin zend_wrong_param_count(TSRMLS_DC); Exit; end;
+  zend_get_parameters_my(ht, p, TSRMLS_DC);
+
+  with TChromium(Z_LVAL(p[0]^)) do
+  begin
+    HashToArray(p[2]^, ARR);
+
+    case Z_LVAL(p[1]^) of
+      1: Browser.Reload;
+      2: Browser.GoBack;
+      3: ZVAL_BOOL(return_value, Browser.CanGoBack);
+      4: Browser.GoForward;
+      5: ZVAL_BOOL(return_value, Browser.CanGoForward);
+      6: Browser.ShowDevTools;
+      7: Browser.CloseDevTools;
+      8: Browser.HidePopup;
+      9:
+      begin
+        if Length(ARR) > 0 then
+          Browser.SetFocus(ARR[0])
+        else
+          Browser.SetFocus(True);
+      end;
+      10: Browser.ReloadIgnoreCache;
+      11: Browser.StopLoad;
+      12: if Length(Arr) > 0 then
+          Browser.SendFocusEvent(arr[0]);
+      13: if Length(Arr) > 4 then
+          Browser.SendKeyEvent(TCefKeyType(arr[0]), arr[1], arr[2], arr[3], arr[4]);
+      14: if Length(Arr) > 4 then
+          Browser.SendMouseClickEvent(arr[0], arr[1],
+            TCefMouseButtonType(arr[2]), arr[3], arr[4]);
+      15: if Length(arr) > 0 then
+          Load(arr[0]);
+      16: if Length(arr) > 1 then
+          ScrollBy(arr[0], arr[1]);
+      17: Browser.ClearHistory;
+      18: ;
+      19: ;
+      20: ;
+      21: ;
+      22: Browser.MainFrame.Undo;
+      23: Browser.MainFrame.Redo;
+      24: Browser.MainFrame.Cut;
+      25: Browser.MainFrame.Copy;
+      26: Browser.MainFrame.Paste;
+      27: Browser.MainFrame.Del;
+      28: Browser.MainFrame.SelectAll;
+      29: Browser.MainFrame.Print;
+      30: Browser.MainFrame.ViewSource;
+      31: if Length(arr) > 0 then
+          Browser.MainFrame.LoadUrl(arr[0]);
+      32: if Length(arr) > 1 then
+          Browser.MainFrame.LoadString(arr[0], arr[1]);
+      33: if Length(arr) > 1 then
+          Browser.MainFrame.LoadFile(arr[0], arr[1]);
+      34: if Length(arr) > 2 then
+          Browser.MainFrame.ExecuteJavaScript(arr[0], arr[1], arr[2]);
+      35:
+      begin
+        Req := TCefRequestRef.Create(nil);
+        Header := TCefStringMapOwn.Create;
+
+        Req.Url := arr[0];
+        Req.Method := arr[1];
+        //Req.SetHeaderMap();
+        //Browser.MainFrame.LoadRequest();
+      end;
+      36:
+      begin
+        if length(arr) > 0 then
+          UserStyleSheetLocation := arr[0]
+        else
+          ZVAL_STRING(return_value, UserStyleSheetLocation);
+      end;
+      37:
+      begin
+        if length(arr) > 0 then
+          DefaultEncoding := arr[0]
+        else
+          ZVAL_STRING(return_value, UserStyleSheetLocation);
+      end;
+      38:
+      begin
+        if Browser.MainFrame <> nil then
+          ZVAL_STRING(return_value, Browser.MainFrame.Source);
+      end;
+      39:
+      begin
+        if Browser.MainFrame <> nil then
+          ZVAL_STRING(return_value, Browser.MainFrame.Url);
+      end;
+    end;
+  end;
+
+  dispose_pzval_array(p);
+end;
+
 
 procedure chromium_settings;
 var
@@ -241,6 +426,9 @@ begin
   PHPEngine.AddFunction('chromium_settings', @chromium_settings);
   PHPEngine.AddFunction('chromium_load', @chromium_load);
   PHPEngine.AddFunction('chromium_allowedcall', @chromium_allowedcall);
+  PHPEngine.AddFunction('chromium_exec', @chromium_exec);
+  PHPEngine.AddFunction('chromium_prop', @chromium_prop);
+
 
   CefLoadLibAfter := callback_CefLoadLib;
 end;

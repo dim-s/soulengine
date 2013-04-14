@@ -34,7 +34,27 @@ procedure regConstList(Names: array of string; From: integer = 0);
 procedure evalCode(Code: string);
 
 
+function isFetchParams(ht, min: integer; p: pzval_array; TSRMLS_DC: Pointer): Boolean;
+function isNull(pr: ppzval): boolean;
+
 implementation
+
+function isNull;
+begin
+  Result := (pr = nil) or (pr^._type = IS_NULL);
+end;
+
+function isFetchParams;
+begin
+  if (ht < min) then
+  begin
+    zend_wrong_param_count(TSRMLS_DC);
+    Result := false;
+    exit;
+  end;
+  zend_get_parameters_my(ht, p, TSRMLS_DC);
+  Result := true;
+end;
 
 
 procedure regConstList(Names: array of string; From: integer = 0);
