@@ -7,7 +7,7 @@ unit guiPHPMod;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, Forms, Graphics, ComCtrls,
+  Classes, SysUtils, Dialogs, Controls, Forms, Graphics, ComCtrls, Registry,
 
   {$ifdef fpc}
   LCLType,
@@ -113,6 +113,16 @@ procedure getabsolutex(ht: integer; return_value: pzval;
 procedure getabsolutey(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
+
+
+procedure registry_create(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
+procedure registry_command(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
 
 
 
@@ -420,6 +430,114 @@ begin
   dispose_pzval_array(p);
 end;
 
+procedure registry_create;
+var p: pzval_array;
+begin
+  ZVAL_OBJECT(return_value, TRegistry.Create);
+end;
+
+procedure registry_command;
+var p: pzval_array;
+  command: string;
+  reg: TRegistry;
+  value, opt, ReturnValue: Variant;
+
+begin
+  if not isFetchParams(ht, 4, p, TSRMLS_DC) then exit;
+
+  reg := TRegistry(Z_LVAL(p[0]^));
+  command := Z_STRVAL(p[1]^);
+  value   := zval2variant(p[2]^^);
+  opt     := zval2variant(p[3]^^);
+
+  if (command = 'createkey') then
+    ReturnValue := reg.CreateKey(value);
+
+  if (command = 'closekey') then
+    reg.CloseKey;
+
+  if (command = 'deletekey') then
+    ReturnValue := reg.DeleteKey(value);
+
+  if (command = 'deletevalue') then
+    ReturnValue := reg.DeleteValue(value);
+
+  if (command = 'getdatasize') then
+    ReturnValue := reg.GetDataSize(value);
+
+  if (command = 'hassubkeys') then
+    ReturnValue := reg.HasSubKeys();
+
+  if (command = 'loadkey') then
+    ReturnValue := reg.LoadKey(value, opt);
+
+  if (command = 'keyexists') then
+    ReturnValue := reg.KeyExists(value);
+
+  if (command = 'openkey') then
+    ReturnValue := reg.OpenKey(value, opt);
+
+  if (command = 'openkeyreadonly') then
+    ReturnValue := reg.OpenKeyReadOnly(value);
+
+  if (command = 'readcurrency') then
+    ReturnValue := reg.ReadCurrency(value);
+
+  if (command = 'readbool') then
+    ReturnValue := reg.ReadBool(value);
+
+  if (command = 'readfloat') then
+    ReturnValue := reg.ReadFloat(value);
+
+  if (command = 'readdate') then
+    ReturnValue := reg.ReadDateTime(value);
+
+  if (command = 'readinteger') then
+    ReturnValue := reg.ReadInteger(value);
+
+  if (command = 'readstring') then
+    ReturnValue := reg.ReadString(value);
+
+  if (command = 'restorekey') then
+    ReturnValue := reg.RestoreKey(value, opt);
+
+  if (command = 'savekey') then
+    ReturnValue := reg.SaveKey(value, opt);
+
+  if (command = 'unloadkey') then
+    ReturnValue := reg.UnLoadKey(value);
+
+  if (command = 'valueexists') then
+    ReturnValue := reg.ValueExists(value);
+
+  if (command = 'currentkey') then
+    ReturnValue := reg.CurrentKey;
+
+  if (command = 'currentpath') then
+    ReturnValue := reg.CurrentPath;
+
+  if (command = 'rootkey') then
+    reg.RootKey := value;
+
+  if (command = 'access') then
+    reg.Access := value;
+
+  if (command = 'writebool') then
+    reg.WriteBool(value, opt);
+
+  if (command = 'writefloat') then
+    reg.WriteFloat(value, opt);
+  
+  if (command = 'writestring') then
+    reg.WriteString(value, opt);
+
+  if (command = 'writeinteger') then
+    reg.WriteInteger(value, opt);
+
+  variant2zval(ReturnValue, return_value);
+  dispose_pzval_array(p);
+end;
+
 
 procedure InitializePHPMod(PHPEngine: TPHPEngine);
 begin
@@ -444,8 +562,10 @@ begin
     PHPEngine.AddFunction('pagecontrol_pages', @pagecontrol_pages);
     PHPEngine.AddFunction('getabsolutex', @getabsolutex);
     PHPEngine.AddFunction('getabsolutey', @getabsolutey);
-    PHPEngine.AddFunction('component_index', @component_index);
-    PHPEngine.AddFunction('component_index', @component_index);
+
+    PHPEngine.AddFunction('registry_create', @registry_create);
+    PHPEngine.AddFunction('registry_command', @registry_command);
+    
     PHPEngine.AddFunction('component_index', @component_index);
     PHPEngine.AddFunction('component_index', @component_index);
     PHPEngine.AddFunction('component_index', @component_index);

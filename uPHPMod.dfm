@@ -2237,7 +2237,6 @@ object phpMOD: TphpMOD
         FunctionName = 'registry_create'
         Tag = 0
         Parameters = <>
-        OnExecute = _RegistryFunctions0Execute
       end
       item
         FunctionName = 'registry_command'
@@ -2263,7 +2262,6 @@ object phpMOD: TphpMOD
             Name = 'Param5'
             ParamType = tpUnknown
           end>
-        OnExecute = _RegistryFunctions1Execute
       end>
     Left = 48
     Top = 168
