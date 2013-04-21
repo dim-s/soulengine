@@ -52,7 +52,6 @@ procedure SetAsMainForm(aForm: TForm);
 type
   TphpMOD = class(TDataModule)
     psvPHP: TpsvPHP;
-    PHPLibrary: TPHPLibrary;
     gui: TPHPLibrary;
     libForms: TPHPLibrary;
     libScreen: TPHPLibrary;
@@ -63,7 +62,6 @@ type
     _TSizeCtrl: TPHPLibrary;
     _TImageList: TPHPLibrary;
     PHPEngine: TPHPEngine;
-    _Registry: TPHPLibrary;
     OSApi: TPHPLibrary;
     _Menus: TPHPLibrary;
     _ExeMod: TPHPLibrary;
@@ -208,8 +206,6 @@ type
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure guiFunctions6Execute(Sender: TObject; Parameters: TFunctionParams;
-      var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure OSApiFunctions2Execute(Sender: TObject; Parameters: TFunctionParams;
       var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure libFormsFunctions5Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
@@ -520,15 +516,6 @@ type
     procedure _TSynEditFunctions6Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions51Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions52Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions53Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure _TSynEditFunctions11Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
@@ -536,15 +523,6 @@ type
       var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure guiFunctions12Execute(Sender: TObject; Parameters: TFunctionParams;
       var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions55Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions56Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions57Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure _TSynEditFunctions12Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
@@ -717,12 +695,6 @@ type
     procedure _TSynEditFunctions25Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions66Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions67Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure _TListsFunctions7Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
@@ -750,9 +722,6 @@ type
     procedure _TPictureLibFunctions25Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
-    procedure PHPLibraryFunctions68Execute(Sender: TObject;
-      Parameters: TFunctionParams; var ReturnValue: variant;
-      ZendVar: TZendVariable; TSRMLS_DC: Pointer);
     procedure __WinUtilsFunctions0Execute(Sender: TObject;
       Parameters: TFunctionParams; var ReturnValue: variant;
       ZendVar: TZendVariable; TSRMLS_DC: Pointer);
@@ -776,6 +745,8 @@ type
     bw1Code: string;
 
     threadCount: integer;
+
+    fatal_handler_php: ansistring;
 
     procedure RunFile(FName: string);
     procedure RunModuleFile(FName: string);
@@ -827,6 +798,36 @@ uses uMain, uMainForm, ImgList, Math, IniFiles, Types,
   uNonVisual, uPhpEvents;
 
 {$R *.dfm}
+
+procedure TphpMOD.PHPEngineScriptError(Sender: TObject; AText: string;
+  AType: integer; AFileName: string; ALineNo: integer);
+var
+  s: string;
+  PHP: TpsvPHP;
+begin
+  if fatal_handler_php <> '' then
+  begin
+    PHP := TpsvPHP(Sender);
+    if Assigned(PHP.Thread) then
+    begin
+      PHP.RunCode(fatal_handler_php + '(' + IntToStr(integer(AType)) + ',' +
+        '''' + AddSlashes(AText) + ''', ''' + AddSlashes(AFileName) +
+        ''', ' + IntToStr(ALineNo) + ');');
+    end
+    else
+      RunCode(fatal_handler_php + '(' + IntToStr(integer(AType)) + ',' +
+        '''' + AddSlashes(AText) + ''', ''' + AddSlashes(AFileName) +
+        ''', ' + IntToStr(ALineNo) + ');');
+  end
+  else
+  begin
+    s := AFileName + ': line ' + IntToStr(ALineNo) + #13;
+    s := s + AText;
+
+    self.lastErr := s;
+    ShowMessage(S);
+  end;
+end;
 
 procedure SetAsMainForm(aForm: TForm);
 var
@@ -1135,21 +1136,9 @@ procedure TphpMOD.TPictureLibFunctions0Execute(Sender: TObject;
   TSRMLS_DC: Pointer);
 var
   p: TPicture;
-  //png: TPNGObject;
 begin
   P := TPicture(ToObj(Parameters, 0));
-
-  { if LowerCase(ExtractFileExt(Parameters[1].Value))='.png' then
-   begin
-        PNG := TPNGObject.Create;
-        PNG.LoadFromFile(Parameters[1].Value);
-        P.Bitmap.Assign(b);
-        P.Assign(PNG);
-        PNG.Free;
-   end else  }
   P.LoadFromFile(Parameters[1].Value);
-
-  // P.LoadFromFile(Parameters[1].Value);
 end;
 
 procedure TphpMOD.TPictureLibFunctions1Execute(Sender: TObject;
@@ -1369,7 +1358,6 @@ begin
   threadCount := 0;
   isTermited := False;
   psvXList := TList.Create;
-  //ApplicationEx := TApplicationEx.Create(nil);
   RegisterHotKey(__fMain.Handle, MyHotKey, 0, MyHotKey);
   IdleEnable := False;
 
@@ -1434,7 +1422,6 @@ end;
 procedure TphpMOD.guiFunctions4Execute(Sender: TObject; Parameters: TFunctionParams;
   var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
 begin
-
   ReturnValue := integer(TComponent(ToObj(Parameters, 0)).FindComponent(
     Parameters[1].Value));
 end;
@@ -1601,8 +1588,6 @@ var
   cm: TComponent;
 begin
   cm := Application.FindComponent(Parameters[0].Value);
-  {if not Assigned(cm) then
-    cm := ApplicationEx.FindComponent(Parameters[0].Value); }
   ReturnValue := integer(cm);
 end;
 
@@ -1667,42 +1652,6 @@ procedure TphpMOD.libScreenFunctions2Execute(Sender: TObject;
   TSRMLS_DC: Pointer);
 begin
   ReturnValue := integer(Screen.ActiveForm);
-end;
-
-// --------------------------------------------------------------------------- //
-var
-  fatal_handler_php: ansistring;
-
-procedure TphpMOD.PHPEngineScriptError(Sender: TObject; AText: string;
-  AType: integer; AFileName: string; ALineNo: integer);
-var
-  s: string;
-  PHP: TpsvPHP;
-begin
-  if fatal_handler_php <> '' then
-  begin
-
-    PHP := TpsvPHP(Sender);
-
-    if Assigned(PHP.Thread) then
-    begin
-      PHP.RunCode(fatal_handler_php + '(' + IntToStr(integer(AType)) + ',' +
-        '''' + AddSlashes(AText) + ''', ''' + AddSlashes(AFileName) +
-        ''', ' + IntToStr(ALineNo) + ');');
-    end
-    else
-      RunCode(fatal_handler_php + '(' + IntToStr(integer(AType)) + ',' +
-        '''' + AddSlashes(AText) + ''', ''' + AddSlashes(AFileName) +
-        ''', ' + IntToStr(ALineNo) + ');');
-  end
-  else
-  begin
-    s := AFileName + ': line ' + IntToStr(ALineNo) + #13;
-    s := s + AText;
-
-    self.lastErr := s;
-    ShowMessage(S);
-  end;
 end;
 
 procedure TphpMOD.TImageListFunctions4Execute(Sender: TObject;
@@ -1783,51 +1732,6 @@ procedure TphpMOD.guiFunctions6Execute(Sender: TObject; Parameters: TFunctionPar
   var ReturnValue: variant; ZendVar: TZendVariable; TSRMLS_DC: Pointer);
 begin
   ReturnValue := integer(Application);
-end;
-
-function SetPrivilege(aPrivilegeName: string; aEnabled: boolean): boolean;
-var
-  TPPrev, TP: TTokenPrivileges;
-  Token: cardinal;
-  dwRetLen: DWord;
-begin
-  Result := False;
-  OpenProcessToken(GetCurrentProcess, TOKEN_ADJUST_PRIVILEGES or TOKEN_QUERY, Token);
-  TP.PrivilegeCount := 1;
-  if LookupPrivilegeValue(nil, PChar(aPrivilegeName), TP.Privileges[0].LUID) then
-  begin
-    if aEnabled then
-      TP.Privileges[0].Attributes := SE_PRIVILEGE_ENABLED
-    else
-      TP.Privileges[0].Attributes := 0;
-    dwRetLen := 0;
-    Result := AdjustTokenPrivileges(Token, False, TP, SizeOf(TPPrev), TPPrev, dwRetLen);
-  end;
-  CloseHandle(Token);
-end;
-
-procedure WindowsSleep;
-var
-  hToken: THandle;
-  tkp: TTokenPrivileges;
-  ReturnLength: cardinal;
-begin
-  if OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES or
-    TOKEN_QUERY, hToken) then
-  begin
-    LookupPrivilegeValue(nil, 'SeShutdownPrivilege', tkp.Privileges[0].Luid);
-    tkp.PrivilegeCount := 1; // one privelege to set
-    tkp.Privileges[0].Attributes := SE_PRIVILEGE_ENABLED;
-    if AdjustTokenPrivileges(hToken, False, tkp, 0, nil, ReturnLength) then
-      SetSystemPowerState(True, True);
-  end;
-end;
-
-procedure TphpMOD.OSApiFunctions2Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  WindowsSleep;
 end;
 
 function GetLocalPath(LOCALDIR: integer): string;
@@ -1959,7 +1863,6 @@ procedure TphpMOD.winApiFunctions3Execute(Sender: TObject;
   Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
   TSRMLS_DC: Pointer);
 begin
-
   RegisterHotKey(__mainForm.Handle, Parameters[0].Value, Parameters[1].Value,
     Parameters[2].Value);
 end;
@@ -3588,28 +3491,6 @@ begin
   ReturnValue := libSysTray.hideBalloonTip(TCoolTrayIcon(ToObj(Parameters[0].Value)));
 end;
 
-procedure TphpMOD.PHPLibraryFunctions51Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := TScrollBox(ToObj(Parameters, 0)).VertScrollBar.IsScrollBarVisible;
-end;
-
-procedure TphpMOD.PHPLibraryFunctions52Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := TScrollBox(ToObj(Parameters, 0)).HorzScrollBar.IsScrollBarVisible;
-end;
-
-procedure TphpMOD.PHPLibraryFunctions53Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := TScrollBox(ToObj(Parameters, 0)).VertScrollBar.Size;
-
-end;
-
 procedure TphpMOD._TSynEditFunctions11Execute(Sender: TObject;
   Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
   TSRMLS_DC: Pointer);
@@ -3653,102 +3534,6 @@ procedure TphpMOD.guiFunctions17Execute(Sender: TObject;
 begin
   SetScrollPos(TWinControl(ToObj(Parameters, 0)).Handle, Parameters[1].Value,
     Parameters[2].Value, Parameters[1].Value);
-end;
-
-procedure TphpMOD.PHPLibraryFunctions55Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := ToComp(Parameters[0].Value).Name;
-end;
-
-procedure TphpMOD.PHPLibraryFunctions56Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-var
-  o: TObject;
-  v: variant;
-begin
-  o := ToObj(Parameters[0].Value);
-  v := Parameters[1].Value;
-
-  if v = Null then
-  begin
-
-    if o is TCustomEdit then
-      ReturnValue := TCustomEdit(o).Text
-    else if o is TListBox then
-      ReturnValue := TListBox(o).Items.Text
-    else if o is TComboBox then
-      ReturnValue := TComboBox(o).Items.Text
-    else if o is TSpeedButton then
-      ReturnValue := TSpeedButton(o).Caption
-    else if o is TButton then
-      ReturnValue := TButton(o).Caption
-    else if o is TCheckBox then
-      ReturnValue := TCheckBox(o).Caption
-    else if o is TRadioButton then
-      ReturnValue := TRadioButton(o).Caption
-    else if o is TGroupBox then
-      ReturnValue := TGroupBox(o).Caption
-    else if o is TRadioGroup then
-      ReturnValue := TRadioGroup(o).Caption
-    else if o is TPanel then
-      ReturnValue := TPanel(o).Caption
-    else if o is TLabel then
-      ReturnValue := TLabel(o).Caption
-    else if o is TMenuItem then
-      ReturnValue := TMenuItem(o).Caption
-    else if o is TListItem then
-      ReturnValue := TListItem(o).Caption
-    else
-    if GetPropInfo(o, 'Caption') <> nil then
-      ReturnValue := GetPropValue(o, 'Caption')
-    else
-      ReturnValue := Null;
-
-  end
-  else
-  begin
-
-    if o is TCustomEdit then
-      TCustomEdit(o).Text := v
-    else if o is TListBox then
-      TListBox(o).Items.Text := v
-    else if o is TComboBox then
-      TComboBox(o).Items.Text := v
-    else if o is TSpeedButton then
-      TSpeedButton(o).Caption := v
-    else if o is TButton then
-      TButton(o).Caption := v
-    else if o is TCheckBox then
-      TCheckBox(o).Caption := v
-    else if o is TRadioButton then
-      TRadioButton(o).Caption := v
-    else if o is TGroupBox then
-      TGroupBox(o).Caption := v
-    else if o is TRadioGroup then
-      TRadioGroup(o).Caption := v
-    else if o is TPanel then
-      TPanel(o).Caption := v
-    else if o is TLabel then
-      TLabel(o).Caption := v
-    else if o is TMenuItem then
-      TMenuItem(o).Caption := v
-    else if o is TListItem then
-      TListItem(o).Caption := v
-    else
-    if GetPropInfo(o, 'Caption') <> nil then
-      SetPropValue(o, 'Caption', v);
-
-  end;
-end;
-
-procedure TphpMOD.PHPLibraryFunctions57Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  String2Stream(Parameters[1].Value, TMemoryStream(ToObj(Parameters, 0)));
 end;
 
 procedure TphpMOD._TSynEditFunctions12Execute(Sender: TObject;
@@ -3905,54 +3690,6 @@ begin
   else if o is TSynEdit then
     TSynEdit(o).SelectAll;
       {$ENDIF}
-end;
-
-procedure SimulateKeyDown(Key: byte);
-begin
-  keybd_event(Key, 0, 0, 0);
-end;
-
-procedure SimulateKeyUp(Key: byte);
-begin
-  keybd_event(Key, 0, KEYEVENTF_KEYUP, 0);
-end;
-
-procedure SimulateKeystroke(Key: byte; extra: DWORD);
-begin
-  keybd_event(Key, extra, 0, 0);
-  keybd_event(Key, extra, KEYEVENTF_KEYUP, 0);
-end;
-
-procedure SendKeys(s: string);
-var
-  i: integer;
-  flag: bool;
-  w: word;
-begin
-  {Get the state of the caps lock key}
-  flag := not GetKeyState(VK_CAPITAL) and 1 = 0;
-  {If the caps lock key is on then turn it off}
-  if flag then
-    SimulateKeystroke(VK_CAPITAL, 0);
-  for i := 1 to Length(s) do
-  begin
-    w := VkKeyScan(s[i]);
-    {If there is not an error in the key translation}
-    if ((HiByte(w) <> $FF) and (LoByte(w) <> $FF)) then
-    begin
-      {If the key requires the shift key down - hold it down}
-      if HiByte(w) and 1 = 1 then
-        SimulateKeyDown(VK_SHIFT);
-      {Send the VK_KEY}
-      SimulateKeystroke(LoByte(w), 0);
-      {If the key required the shift key down - release it}
-      if HiByte(w) and 1 = 1 then
-        SimulateKeyUp(VK_SHIFT);
-    end;
-  end;
-  {if the caps lock key was on at start, turn it back on}
-  if flag then
-    SimulateKeystroke(VK_CAPITAL, 0);
 end;
 
 procedure TphpMOD._TSynEditFunctions16Execute(Sender: TObject;
@@ -4527,26 +4264,6 @@ begin
   TSizeCtrl(ToObj(Parameters, 0)).UpdateBtns;
 end;
 
-procedure TphpMOD.PHPLibraryFunctions66Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := TimeToStr(Parameters[0].Value);
-end;
-
-procedure TphpMOD.PHPLibraryFunctions67Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  ReturnValue := StrToDateTime(Parameters[0].Value);
-end;
-
-procedure TphpMOD.PHPLibraryFunctions68Execute(Sender: TObject;
-  Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;
-  TSRMLS_DC: Pointer);
-begin
-  fatal_handler_php := Parameters[0].ZendVariable.AsString;
-end;
 
 procedure TphpMOD._TStringsLibFunctions3Execute(Sender: TObject;
   Parameters: TFunctionParams; var ReturnValue: variant; ZendVar: TZendVariable;

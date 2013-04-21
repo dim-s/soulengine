@@ -7,7 +7,8 @@ unit guiPHPMod;
 interface
 
 uses
-  Classes, SysUtils, Dialogs, Controls, Forms, Graphics, ComCtrls, Registry,
+  Classes, SysUtils, Dialogs, Controls, Forms, Graphics, ComCtrls,
+  Registry, StdCtrls, Buttons, ExtCtrls, Menus, TypInfo,
 
   {$ifdef fpc}
   LCLType,
@@ -22,6 +23,7 @@ uses
   phpUtils,
   uPhpEvents,
   uForms,
+  uPHPMod,
 
   SizeControl;
 
@@ -52,6 +54,10 @@ procedure component_index(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 
+procedure component_name(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
 procedure control_helpkeyword(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
@@ -77,6 +83,10 @@ procedure control_h(ht: integer; return_value: pzval;
   TSRMLS_DC: pointer); cdecl;
 
 procedure control_hint(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
+procedure control_text(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 
@@ -114,6 +124,19 @@ procedure getabsolutey(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
   TSRMLS_DC: pointer); cdecl;
 
+  
+procedure scrollbox_vsshowing(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
+procedure scrollbox_hsshowing(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
+procedure scrollbox_sbsize(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
+
 
 procedure registry_create(ht: integer; return_value: pzval;
   return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
@@ -124,6 +147,9 @@ procedure registry_command(ht: integer; return_value: pzval;
   TSRMLS_DC: pointer); cdecl;
 
 
+procedure set_fatal_handler(ht: integer; return_value: pzval;
+  return_value_ptr: pzval; this_ptr: pzval; return_value_used: integer;
+  TSRMLS_DC: pointer); cdecl;
 
 
 implementation
@@ -218,7 +244,16 @@ procedure component_index;
   p: pzval_array;
 begin
   if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
-  ZVAL_LONG(return_value, toWControl(Z_LVAL(p[0]^)).ComponentIndex);
+  ZVAL_LONG(return_value, TComponent(Z_LVAL(p[0]^)).ComponentIndex);
+  dispose_pzval_array(p);
+end;
+
+procedure component_name;
+  var
+  p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  ZVAL_STRING(return_value, TComponent(Z_LVAL(p[0]^)).Name);
   dispose_pzval_array(p);
 end;
 
@@ -345,6 +380,92 @@ begin
     ZVAL_STRING(return_value, toControl(Z_LVAL(p[0]^)).Hint)
   else
     toControl(Z_LVAL(p[0]^)).Hint := Z_STRVAL(p[1]^);
+
+  dispose_pzval_array(p);
+end;
+
+procedure control_text;
+var p: pzval_array;
+   o: TObject;
+   v, ReturnValue: String;
+begin
+  if not isFetchParams(ht, 2, p, TSRMLS_DC) then exit;
+
+  o := toObject(Z_LVAL(p[0]^));
+
+  if o <> nil then
+  if isNull(p[1]) then
+  begin
+    if o is TCustomEdit then
+      ReturnValue := TCustomEdit(o).Text
+    else if o is TListBox then
+      ReturnValue := TListBox(o).Items.Text
+    else if o is TComboBox then
+      ReturnValue := TComboBox(o).Items.Text
+    else if o is TSpeedButton then
+      ReturnValue := TSpeedButton(o).Caption
+    else if o is TButton then
+      ReturnValue := TButton(o).Caption
+    else if o is TCheckBox then
+      ReturnValue := TCheckBox(o).Caption
+    else if o is TRadioButton then
+      ReturnValue := TRadioButton(o).Caption
+    else if o is TGroupBox then
+      ReturnValue := TGroupBox(o).Caption
+    else if o is TRadioGroup then
+      ReturnValue := TRadioGroup(o).Caption
+    else if o is TPanel then
+      ReturnValue := TPanel(o).Caption
+    else if o is TLabel then
+      ReturnValue := TLabel(o).Caption
+    else if o is TMenuItem then
+      ReturnValue := TMenuItem(o).Caption
+    else if o is TListItem then
+      ReturnValue := TListItem(o).Caption
+    else
+    if GetPropInfo(o, 'Caption') <> nil then
+      ReturnValue := GetPropValue(o, 'Caption')
+    else begin
+        ZVAL_NULL(return_value);
+        dispose_pzval_array(p);
+        exit;
+    end;
+
+    ZVAL_STRING(return_value, ReturnValue);
+  end else
+  begin
+        v := Z_STRVAL(p[1]^);
+        
+          if o is TCustomEdit then
+            TCustomEdit(o).Text := v
+          else if o is TListBox then
+            TListBox(o).Items.Text := v
+          else if o is TComboBox then
+            TComboBox(o).Items.Text := v
+          else if o is TSpeedButton then
+            TSpeedButton(o).Caption := v
+          else if o is TButton then
+            TButton(o).Caption := v
+          else if o is TCheckBox then
+            TCheckBox(o).Caption := v
+          else if o is TRadioButton then
+            TRadioButton(o).Caption := v
+          else if o is TGroupBox then
+            TGroupBox(o).Caption := v
+          else if o is TRadioGroup then
+            TRadioGroup(o).Caption := v
+          else if o is TPanel then
+            TPanel(o).Caption := v
+          else if o is TLabel then
+            TLabel(o).Caption := v
+          else if o is TMenuItem then
+            TMenuItem(o).Caption := v
+          else if o is TListItem then
+            TListItem(o).Caption := v
+          else
+          if GetPropInfo(o, 'Caption') <> nil then
+            SetPropValue(o, 'Caption', v);
+  end;
 
   dispose_pzval_array(p);
 end;
@@ -539,6 +660,41 @@ begin
 end;
 
 
+procedure scrollbox_vsshowing;
+var p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  ZVAL_BOOL(return_value,
+         TScrollBox(Z_LVAL(p[0]^)).VertScrollBar.IsScrollBarVisible);
+  dispose_pzval_array(p);
+end;
+
+procedure scrollbox_hsshowing;
+var p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  ZVAL_BOOL(return_value,
+         TScrollBox(Z_LVAL(p[0]^)).HorzScrollBar.IsScrollBarVisible);
+  dispose_pzval_array(p);
+end;
+
+procedure scrollbox_sbsize;
+var p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  ZVAL_LONG(return_value,
+         TScrollBox(Z_LVAL(p[0]^)).VertScrollBar.Size);
+  dispose_pzval_array(p);
+end;
+
+procedure set_fatal_handler;
+var p: pzval_array;
+begin
+  if not isFetchParams(ht, 1, p, TSRMLS_DC) then exit;
+  phpMOD.fatal_handler_php := Z_STRVAL(p[0]^);
+  dispose_pzval_array(p);
+end;
+
 procedure InitializePHPMod(PHPEngine: TPHPEngine);
 begin
   PHPEngine.AddFunction('random', @random);
@@ -547,6 +703,7 @@ begin
     PHPEngine.AddFunction('convert_file_to_bmp', @convert_file_to_bmp);
     PHPEngine.AddFunction('bitmap_empty', @bitmap_empty);
     PHPEngine.AddFunction('component_index', @component_index);
+    PHPEngine.AddFunction('component_name', @component_name);
     PHPEngine.AddFunction('control_helpkeyword', @control_helpkeyword);
     PHPEngine.AddFunction('control_visible', @control_visible);
     PHPEngine.AddFunction('control_x', @control_x);
@@ -554,6 +711,7 @@ begin
     PHPEngine.AddFunction('control_w', @control_w);
     PHPEngine.AddFunction('control_h', @control_h);
     PHPEngine.AddFunction('control_hint', @control_hint);
+    PHPEngine.AddFunction('control_text', @control_text);
     PHPEngine.AddFunction('tabcontrol_indexofxy', @tabcontrol_indexofxy);
     PHPEngine.AddFunction('control_invalidate', @control_invalidate);
   PHPEngine.AddFunction('delay', @delay);
@@ -566,15 +724,15 @@ begin
     PHPEngine.AddFunction('registry_create', @registry_create);
     PHPEngine.AddFunction('registry_command', @registry_command);
     
+    PHPEngine.AddFunction('scrollbox_vsshowing', @scrollbox_vsshowing);
+    PHPEngine.AddFunction('scrollbox_hsshowing', @scrollbox_hsshowing);
+    PHPEngine.AddFunction('scrollbox_sbsize', @scrollbox_sbsize);
+    
+  PHPEngine.AddFunction('set_fatal_handler', @set_fatal_handler);
     PHPEngine.AddFunction('component_index', @component_index);
     PHPEngine.AddFunction('component_index', @component_index);
     PHPEngine.AddFunction('component_index', @component_index);
     PHPEngine.AddFunction('component_index', @component_index);
-    PHPEngine.AddFunction('component_index', @component_index);
-    PHPEngine.AddFunction('component_index', @component_index);
-    PHPEngine.AddFunction('component_index', @component_index);
-    PHPEngine.AddFunction('component_index', @component_index);
-
 end;
 
 
