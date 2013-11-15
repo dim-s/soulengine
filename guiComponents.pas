@@ -772,7 +772,7 @@ begin
   end;
   zend_get_parameters_my(ht, p, TSRMLS_DC);
 
-  SetMaxCntThreads(Z_LVAL(p[1]^));
+  SetMaxCntThreads(Z_LVAL(p[0]^));
 
   dispose_pzval_array(p);
 end;
